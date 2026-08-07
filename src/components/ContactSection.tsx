@@ -134,13 +134,14 @@ export function ContactSection() {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
+              <form onSubmit={handleSubmit} className="space-y-4" suppressHydrationWarning>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" suppressHydrationWarning>
+                  <div className="space-y-1" suppressHydrationWarning>
                     <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">Your Name</label>
                     <input
                       type="text"
                       required
+                      autoComplete="name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Sarah Connor"
@@ -148,11 +149,12 @@ export function ContactSection() {
                     />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1" suppressHydrationWarning>
                     <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">Your Email</label>
                     <input
                       type="email"
                       required
+                      autoComplete="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="e.g. sarah@example.com"

@@ -6,9 +6,11 @@ import Link from "next/link";
 import { ArrowUp, Clock } from "lucide-react";
 
 export function Footer() {
+  const [mounted, setMounted] = useState(false);
   const [timeString, setTimeString] = useState<string>("");
 
   useEffect(() => {
+    setMounted(true);
     const updateClock = () => {
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "America/Los_Angeles",
@@ -50,7 +52,9 @@ export function Footer() {
           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-mono text-xs shadow-sm">
             <Clock className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
             <span>Orange County, CA:</span>
-            <span className="font-bold text-sky-600 dark:text-sky-400">{timeString || "1:57 PM PST"}</span>
+            <span className="font-bold text-sky-600 dark:text-sky-400" suppressHydrationWarning>
+              {mounted ? timeString : "1:57 PM PST"}
+            </span>
           </div>
 
           <button
