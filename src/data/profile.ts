@@ -47,6 +47,24 @@ export interface BeatTrack {
   audioSimulationUrl?: string;
 }
 
+export interface YouTubeVideo {
+  id: string;
+  videoId: string;
+  title: string;
+  description: string;
+  duration: string;
+  genre: string;
+  url: string;
+  thumbnail: string;
+}
+
+export interface YouTubePlaylistData {
+  title: string;
+  channelName: string;
+  url: string;
+  videos: YouTubeVideo[];
+}
+
 export const PROFILE_DATA = {
   name: "William Zain",
   handle: "@bwzain",
@@ -140,6 +158,54 @@ export const PROFILE_DATA = {
       description: "Expansive orchestral strings layered over analog synthesis and lush reverb tails."
     }
   ] as BeatTrack[],
+
+  youtubePlaylist: {
+    title: "Billy Zain's Music Videos & Soundscapes",
+    channelName: "Billy Zain / Zainy Beats",
+    url: "https://www.youtube.com/watch?v=mh29q13G8EE&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+    videos: [
+      {
+        id: "yt-1",
+        videoId: "mh29q13G8EE",
+        title: "A Gathering Storm (Official Video)",
+        description: "Cinematic/classical instrumental exploring emotional extremes through storm soundscapes and visuals.",
+        duration: "4:12",
+        genre: "Cinematic / Instrumental",
+        url: "https://www.youtube.com/watch?v=mh29q13G8EE&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+        thumbnail: "https://img.youtube.com/vi/mh29q13G8EE/hqdefault.jpg"
+      },
+      {
+        id: "yt-2",
+        videoId: "VfpsFYI4ou0",
+        title: "Ghost in the Room (Official Music Video)",
+        description: "Haunting alt-pop/alt-rock fusion where memory becomes a phantom and grief wears perfume.",
+        duration: "3:12",
+        genre: "Alt-Pop / Alt-Rock",
+        url: "https://www.youtube.com/watch?v=VfpsFYI4ou0",
+        thumbnail: "https://img.youtube.com/vi/VfpsFYI4ou0/hqdefault.jpg"
+      },
+      {
+        id: "yt-3",
+        videoId: "GyoHKRAQQPg",
+        title: "Moscow Lights (Official Music Video)",
+        description: "Layered House and Techno textures with poetic lyricism and ambient sound design set in a snow-covered night.",
+        duration: "3:45",
+        genre: "Ambient Synthwave / Techno",
+        url: "https://www.youtube.com/watch?v=GyoHKRAQQPg",
+        thumbnail: "https://img.youtube.com/vi/GyoHKRAQQPg/hqdefault.jpg"
+      },
+      {
+        id: "yt-4",
+        videoId: "rxoyTfn6pso",
+        title: "Steel Canyon Ghosts (Official Audio)",
+        description: "Pulsing electronic arrangement and driving rhythms from the album Cultural Static.",
+        duration: "4:22",
+        genre: "Electronic / Synth",
+        url: "https://www.youtube.com/watch?v=rxoyTfn6pso",
+        thumbnail: "https://img.youtube.com/vi/rxoyTfn6pso/hqdefault.jpg"
+      }
+    ]
+  } as YouTubePlaylistData,
 
   websites: [
     {
