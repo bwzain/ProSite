@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, Headphones, BookOpen, Compass, Briefcase, Trophy, Globe, Mail, ChevronRight, Sparkles, ExternalLink } from "lucide-react";
+import { Menu, X, Sun, Moon, Headphones, BookOpen, Compass, Briefcase, Trophy, Globe, Mail, ChevronRight, Sparkles, ExternalLink, Bot } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import { PROFILE_DATA } from "@/data/profile";
 
@@ -76,12 +76,21 @@ export function Navbar() {
             {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
 
+          {/* AI Twin Chat Button */}
+          <Link
+            href="/contact#chat"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white shadow-md hover:scale-105 transition-all"
+          >
+            <Bot className="w-3.5 h-3.5 text-cyan-200" />
+            <span>AI Twin Chat</span>
+          </Link>
+
           {/* AI Book Quick Link */}
           <a
             href={PROFILE_DATA.book.amazonUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90 transition-all"
+            className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90 transition-all"
           >
             <BookOpen className="w-3.5 h-3.5" />
             <span>AI Book</span>
