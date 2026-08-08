@@ -11,6 +11,8 @@ import { PROFILE_DATA } from "@/data/profile";
 export function Navbar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const handleNavClick = (href: string) => {
     setMenuOpen(false);
     if (href === "/") {
