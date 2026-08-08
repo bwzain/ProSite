@@ -70,7 +70,7 @@ export function Footer() {
             © {new Date().getFullYear()} William Zain. All rights reserved.
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 font-bold">
-            <Link href="/" className="hover:text-sky-600 transition-colors">Overview</Link>
+            <Link href="/" onClick={scrollToTop} className="hover:text-sky-600 transition-colors">Overview</Link>
             <Link href="/about" className="hover:text-sky-600 transition-colors">About</Link>
             <Link href="/creations" className="hover:text-sky-600 transition-colors">Creations</Link>
             <Link href="/websites" className="hover:text-sky-600 transition-colors">Websites</Link>

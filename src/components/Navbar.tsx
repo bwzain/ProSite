@@ -11,7 +11,14 @@ import { PROFILE_DATA } from "@/data/profile";
 export function Navbar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const handleNavClick = (href: string) => {
+    setMenuOpen(false);
+    if (href === "/") {
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  };
 
   const navItems = [
     { name: "Overview", href: "/", icon: Sparkles, desc: "Portfolio summary & quick spotlights" },
@@ -27,7 +34,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" onClick={() => handleNavClick("/")} className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-600 p-[2px] shadow-md group-hover:scale-105 transition-transform">
             <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center font-black text-cyan-400 text-base">
               WZ
@@ -52,6 +59,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => handleNavClick(item.href)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   isActive
                     ? "bg-sky-600 text-white shadow-md"
@@ -147,7 +155,7 @@ export function Navbar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => handleNavClick(item.href)}
                       className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 group ${
                         isActive
                           ? "bg-sky-50 dark:bg-sky-950/60 border-sky-500 text-sky-900 dark:text-sky-100 shadow-sm"

@@ -26,10 +26,12 @@ export function DigitalTwinChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -264,7 +266,7 @@ export function DigitalTwinChat() {
       </div>
 
       {/* Message List */}
-      <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm">
+      <div ref={messagesContainerRef} className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm">
         {messages.map((m, idx) => (
           <div
             key={idx}
@@ -310,8 +312,6 @@ export function DigitalTwinChat() {
             <span>{error}</span>
           </div>
         )}
-
-        <div ref={chatEndRef} />
       </div>
 
       {/* Input Form */}
