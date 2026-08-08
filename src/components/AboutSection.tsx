@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Headphones, BookOpen, Cpu, Compass, CheckCircle2, Shield } from "lucide-react";
+import Image from "next/image";
+import { Headphones, BookOpen, Cpu, Compass, CheckCircle2, Shield, MapPin, Award, Mail } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
 export function AboutSection() {
@@ -33,18 +34,47 @@ export function AboutSection() {
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left: Executive Story */}
+          {/* Left Column: Executive Story Card with Integrated Portrait */}
           <div className="lg:col-span-7 space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="space-y-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl"
+              className="space-y-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden"
             >
-              <blockquote className="border-l-4 border-sky-500 pl-4 py-1 italic text-slate-800 dark:text-slate-200 font-bold text-base">
-                "{PROFILE_DATA.about.motto}"
-              </blockquote>
+              {/* Executive Bio Header Card */}
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
+                <div className="relative w-28 h-36 sm:w-32 sm:h-40 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-200 dark:border-slate-700 shadow-lg bg-slate-950">
+                  <Image
+                    src="/images/self-portrait.png"
+                    alt="William Zain Portrait"
+                    fill
+                    sizes="128px"
+                    className="object-cover object-top"
+                  />
+                </div>
 
+                <div className="space-y-2 text-center sm:text-left">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 dark:bg-sky-950 border border-sky-300 dark:border-sky-800 text-sky-800 dark:text-sky-300 text-[10px] font-mono font-bold uppercase">
+                    <Award className="w-3 h-3 text-sky-600 dark:text-sky-400" />
+                    <span>Toastmasters DTM • Enterprise Architect</span>
+                  </div>
+
+                  <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+                    William Zain
+                  </h3>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                    Orange County, CA • BS Computer Science • 30+ Yrs Enterprise IT
+                  </p>
+
+                  <blockquote className="border-l-2 border-sky-500 pl-3 italic text-slate-700 dark:text-slate-300 font-semibold text-xs pt-1">
+                    "{PROFILE_DATA.about.motto}"
+                  </blockquote>
+                </div>
+              </div>
+
+              {/* Biography Paragraphs */}
               {PROFILE_DATA.about.storyParagraphs.map((paragraph, index) => (
                 <p key={index} className="text-slate-700 dark:text-slate-200 leading-relaxed text-sm sm:text-base font-normal">
                   {paragraph}
@@ -70,7 +100,7 @@ export function AboutSection() {
             </motion.div>
           </div>
 
-          {/* Right: Pillars List */}
+          {/* Right Column: Pillars List */}
           <div className="lg:col-span-5 grid grid-cols-1 gap-4">
             {PROFILE_DATA.about.creativePillars.map((pillar, idx) => {
               const IconComponent = iconMap[pillar.icon] || Cpu;
