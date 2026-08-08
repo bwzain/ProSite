@@ -149,7 +149,13 @@ export async function POST(req: Request) {
     }
 
     const data = await openRouterRes.json();
-    const reply = data?.choices?.[0]?.message?.content || "Hello! I am ready to answer any questions about William Zain's career, AI books, music, and travel.";
+    const replyRaw = data?.choices?.[0]?.message?.content || "Hello! I am ready to answer any questions about William Zain's career, AI books, music, and travel.";
+    const reply = replyRaw
+      .replace(/\uFFFD/g, "'")
+      .replace(/â€™/g, "'")
+      .replace(/â€"/g, "—")
+      .replace(/â€“/g, "–")
+      .trim();
 
     return NextResponse.json({
       reply,

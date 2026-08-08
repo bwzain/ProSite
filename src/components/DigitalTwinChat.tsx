@@ -81,10 +81,53 @@ export function DigitalTwinChat() {
     setError(null);
   };
 
-  const renderFormattedText = (text: string) => {
-    // Simple URL link detector and newline renderer
-    const parts = text.split(/(https?:\/\/[^\s]+)/g);
+  const cleanResponseText = (text: string): string => {
+    if (!text) return "";
+    return text
+      .replace(/\uFFFD/g, "'")
+      .replace(/â€™/g, "'")
+      .replace(/â€"/g, "—")
+      .replace(/â€“/g, "–")
+      .trim();
+  };
+
+  const parseInlineMarkdown = (str: string) => {
+    // Matches: **bold text**, [link text](url), or standalone URLs https://...
+    const regex = /(\*\*[^*]+\*\*|\[[^\]]+\]\(https?:\/\/[^\s)]+\)|https?:\/\/[^\s)]+)/g;
+    const parts = str.split(regex);
+
     return parts.map((part, index) => {
+      if (!part) return null;
+
+      // 1. Bold text: **something**
+      if (part.startsWith("**") && part.endsWith("**") && part.length >= 4) {
+        const innerBold = part.slice(2, -2);
+        return (
+          <strong key={index} className="font-extrabold text-slate-900 dark:text-white">
+            {parseInlineMarkdown(innerBold)}
+          </strong>
+        );
+      }
+
+      // 2. Markdown Link: [label](url)
+      const markdownLinkMatch = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
+      if (markdownLinkMatch) {
+        const label = markdownLinkMatch[1].replace(/\*\*/g, ""); // strip inner ** if any
+        const url = markdownLinkMatch[2];
+        return (
+          <a
+            key={index}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-600 dark:text-sky-400 hover:text-sky-500 underline font-bold transition-colors inline-flex items-center gap-0.5"
+          >
+            <span>{label}</span>
+          </a>
+        );
+      }
+
+      // 3. Standalone URL: https://...
       if (part.match(/^https?:\/\//)) {
         return (
           <a
@@ -92,14 +135,76 @@ export function DigitalTwinChat() {
             href={part}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sky-500 hover:text-sky-400 underline font-bold break-all"
+            className="text-sky-600 dark:text-sky-400 hover:text-sky-500 underline font-bold break-all transition-colors"
           >
             {part}
           </a>
         );
       }
+
+      // Regular plain text
       return part;
     });
+  };
+
+  const renderFormattedText = (text: string) => {
+    const cleaned = cleanResponseText(text);
+    const lines = cleaned.split("\n");
+
+    let numberedIndex = 0;
+
+    return (
+      <div className="space-y-2">
+        {lines.map((line, lineIdx) => {
+          const trimmed = line.trim();
+
+          if (!trimmed) {
+            return <div key={lineIdx} className="h-1.5" />;
+          }
+
+          // Check if line starts with ###
+          if (trimmed.startsWith("###")) {
+            numberedIndex++;
+            // Remove ### and leading digits/dots if present e.g. "### 1. Title" or "### Title"
+            let titleText = trimmed.replace(/^###\s*/, "");
+            const numberMatch = titleText.match(/^(\d+)[\.\)]\s*(.*)/);
+            let itemNum = numberedIndex;
+            if (numberMatch) {
+              itemNum = parseInt(numberMatch[1], 10);
+              titleText = numberMatch[2];
+            }
+
+            return (
+              <div
+                key={lineIdx}
+                className="flex items-start gap-2.5 my-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80"
+              >
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-extrabold text-xs shrink-0 shadow-sm border border-sky-300 dark:border-sky-800">
+                  {itemNum}
+                </span>
+                <div className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base pt-0.5">
+                  {parseInlineMarkdown(titleText)}
+                </div>
+              </div>
+            );
+          }
+
+          // Bullet point lines
+          if (trimmed.startsWith("* ") || trimmed.startsWith("- ")) {
+            const bulletText = trimmed.replace(/^[\*\-]\s*/, "");
+            return (
+              <div key={lineIdx} className="flex items-start gap-2 pl-2 my-1">
+                <span className="text-sky-500 dark:text-sky-400 font-bold text-base leading-none">•</span>
+                <div className="flex-1">{parseInlineMarkdown(bulletText)}</div>
+              </div>
+            );
+          }
+
+          // Regular paragraph line
+          return <div key={lineIdx}>{parseInlineMarkdown(line)}</div>;
+        })}
+      </div>
+    );
   };
 
   return (
