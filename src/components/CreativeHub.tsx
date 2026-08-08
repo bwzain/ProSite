@@ -1,20 +1,65 @@
-"use me";
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Headphones, Play, Pause, SkipForward, SkipBack, Volume2, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, X } from "lucide-react";
-import { PROFILE_DATA, YouTubeVideo } from "@/data/profile";
+import { Headphones, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, Play, X, ChevronDown, Rss } from "lucide-react";
+import { PROFILE_DATA, YouTubeVideo, RssStory } from "@/data/profile";
 
 export function CreativeHub() {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"beats" | "book" | "travel">("beats");
-  const [bookModalOpen, setBookModalOpen] = useState(false);
+  const [expandedBookIds, setExpandedBookIds] = useState<Record<string, boolean>>({});
   const [activeVideoModal, setActiveVideoModal] = useState<YouTubeVideo | null>(null);
 
-  const currentTrack = PROFILE_DATA.musicTracks[currentTrackIndex];
+  // RSS Feed state
+  const [rssStories, setRssStories] = useState<RssStory[]>([]);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [loadingRss, setLoadingRss] = useState(false);
+  const [rssError, setRssError] = useState<string | null>(null);
+
   const playlist = PROFILE_DATA.youtubePlaylist;
+
+  const fetchTravelRss = async () => {
+    setLoadingRss(true);
+    setRssError(null);
+    try {
+      const res = await fetch(`/api/rss?t=${Date.now()}`);
+      const data = await res.json();
+      if (data.success && Array.isArray(data.stories)) {
+        setRssStories(data.stories);
+      } else {
+        setRssError(data.error || "Failed to load feed");
+      }
+    } catch {
+      setRssError("Network error loading travel feed");
+    } finally {
+      setLoadingRss(false);
+    }
+  };
+
+  const handleTabClick = (tab: "beats" | "book" | "travel") => {
+    setActiveTab(tab);
+    if (tab === "travel") {
+      setVisibleCount(3);
+      fetchTravelRss();
+    }
+  };
+
+  const handleLoadMore = async () => {
+    if (visibleCount < rssStories.length) {
+      setVisibleCount((prev) => Math.min(prev + 3, rssStories.length));
+    } else {
+      // Re-evaluate feed if we reached end of current stories array
+      setLoadingRss(true);
+      await fetchTravelRss();
+      setVisibleCount((prev) => prev + 3);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "travel") {
+      fetchTravelRss();
+    }
+  }, [activeTab]);
 
   return (
     <section className="py-20 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -30,7 +75,7 @@ export function CreativeHub() {
             Digital Music, <span className="text-purple-600 dark:text-purple-400">AI Literature</span> & Travel Media
           </h2>
           <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl font-medium">
-            Explore Zainy Beats music studio, YouTube video playlists, William Zain's published AI book on Amazon, and global travel media.
+            Explore Zainy Beats music video playlists, Spotify streams, William Zain's published AI books on Amazon, and global travel media.
           </p>
         </div>
 
@@ -38,7 +83,7 @@ export function CreativeHub() {
         <div className="flex justify-center mb-10">
           <div className="inline-flex p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow-md gap-2">
             <button
-              onClick={() => setActiveTab("beats")}
+              onClick={() => handleTabClick("beats")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "beats"
                   ? "bg-purple-600 text-white shadow-md"
@@ -46,11 +91,11 @@ export function CreativeHub() {
               }`}
             >
               <Headphones className="w-4 h-4" />
-              <span>Zainy Beats & YouTube Playlist</span>
+              <span>Zainy Beats & YouTube / Spotify</span>
             </button>
 
             <button
-              onClick={() => setActiveTab("book")}
+              onClick={() => handleTabClick("book")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "book"
                   ? "bg-sky-600 text-white shadow-md"
@@ -58,11 +103,11 @@ export function CreativeHub() {
               }`}
             >
               <BookOpen className="w-4 h-4" />
-              <span>AI Book</span>
+              <span>AI Books</span>
             </button>
 
             <button
-              onClick={() => setActiveTab("travel")}
+              onClick={() => handleTabClick("travel")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "travel"
                   ? "bg-emerald-600 text-white shadow-md"
@@ -75,7 +120,7 @@ export function CreativeHub() {
           </div>
         </div>
 
-        {/* TAB 1: ZAINY BEATS & YOUTUBE PLAYLIST */}
+        {/* TAB 1: ZAINY BEATS, YOUTUBE & SPOTIFY PLAYLIST */}
         {activeTab === "beats" && (
           <div className="space-y-12">
             
@@ -188,235 +233,166 @@ export function CreativeHub() {
               </div>
             </motion.div>
 
-            {/* DAW Synth Audio Engine Card */}
+            {/* Spotify Embedded Playlist Section */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 dark:bg-slate-950 p-6 sm:p-8 rounded-3xl border border-purple-200 dark:border-purple-900/50 shadow-xl"
+              className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-6"
             >
-              {/* Player Main */}
-              <div className="lg:col-span-7 space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-purple-600 flex items-center justify-center text-white shadow-lg">
-                      <Music className="w-6 h-6 animate-pulse" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">Zainy Beats Studio DAW Simulation</h3>
-                      <p className="text-xs text-purple-700 dark:text-purple-300 font-mono font-bold">Ableton Live 12 // Modern Audio DAW</p>
-                    </div>
+              {/* Header */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Music className="w-5 h-5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                    <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                      Official Spotify Stream
+                    </span>
                   </div>
-
-                  <span className="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 border border-purple-300 dark:border-purple-700 text-purple-900 dark:text-purple-200 text-xs font-mono font-bold">
-                    {currentTrack.genre}
-                  </span>
+                  <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+                    Zainy Beats Official Spotify Playlist
+                  </h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                    Stream full tracks, ambient soundscapes, and synthwave compositions directly from Spotify.
+                  </p>
                 </div>
 
-                {/* Track Box */}
-                <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-2xl font-black text-slate-900 dark:text-white">
-                        {currentTrack.title}
-                      </h4>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-                        {currentTrack.description}
-                      </p>
-                    </div>
-                    <div className="text-right font-mono text-xs text-slate-600 dark:text-slate-300 space-y-1 shrink-0 ml-4">
-                      <div>BPM: <span className="text-purple-600 dark:text-purple-400 font-bold">{currentTrack.bpm}</span></div>
-                      <div>Key: <span className="text-sky-600 dark:text-sky-400 font-bold">{currentTrack.key}</span></div>
-                      <div>Length: <span className="font-bold">{currentTrack.duration}</span></div>
-                    </div>
-                  </div>
-
-                  {/* Equalizer Visualizer */}
-                  <div className="h-16 bg-slate-100 dark:bg-slate-950 rounded-xl p-3 flex items-end justify-between gap-1 border border-slate-200 dark:border-slate-800">
-                    {Array.from({ length: 32 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-full rounded-t-sm transition-all duration-300 ${
-                          isPlaying ? "bg-purple-600 dark:bg-purple-400 animate-pulse" : "bg-slate-300 dark:bg-slate-700"
-                        }`}
-                        style={{
-                          height: isPlaying ? `${Math.max(20, (Math.sin(i * 0.5) * 40 + 60))}%` : "20%",
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Controls */}
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => setCurrentTrackIndex((prev) => (prev - 1 + PROFILE_DATA.musicTracks.length) % PROFILE_DATA.musicTracks.length)}
-                        className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-purple-500"
-                        aria-label="Previous Track"
-                      >
-                        <SkipBack className="w-4 h-4" />
-                      </button>
-
-                      <button
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="p-3.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-lg flex items-center gap-2"
-                        aria-label={isPlaying ? "Pause" : "Play"}
-                      >
-                        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-                        <span className="text-xs font-mono">{isPlaying ? "PAUSE" : "PLAY BEAT"}</span>
-                      </button>
-
-                      <button
-                        onClick={() => setCurrentTrackIndex((prev) => (prev + 1) % PROFILE_DATA.musicTracks.length)}
-                        className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-purple-500"
-                        aria-label="Next Track"
-                      >
-                        <SkipForward className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-purple-700 dark:text-purple-300">
-                      <Volume2 className="w-4 h-4" />
-                      <span>Ableton Synth Engine</span>
-                    </div>
-                  </div>
-                </div>
+                <a
+                  href="https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26?si=6531112846d84318"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 hover:scale-105 transition-all shrink-0"
+                >
+                  <Music className="w-4 h-4" />
+                  <span>Open in Spotify App</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                </a>
               </div>
 
-              {/* Track Selector List */}
-              <div className="lg:col-span-5 space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-400 font-mono">
-                  Audio Studio Selections
-                </h4>
-                <div className="space-y-2.5">
-                  {PROFILE_DATA.musicTracks.map((track, idx) => (
-                    <button
-                      key={track.id}
-                      onClick={() => {
-                        setCurrentTrackIndex(idx);
-                        setIsPlaying(true);
-                      }}
-                      className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center justify-between ${
-                        currentTrackIndex === idx
-                          ? "bg-purple-600 text-white border-purple-500 shadow-md"
-                          : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-purple-400"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold ${
-                          currentTrackIndex === idx ? "bg-white text-purple-700" : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                        }`}>
-                          {idx + 1}
-                        </div>
-                        <div>
-                          <div className="font-bold text-sm">{track.title}</div>
-                          <div className={`text-[11px] ${currentTrackIndex === idx ? "text-purple-100" : "text-slate-500 dark:text-slate-400"}`}>
-                            {track.genre} • {track.bpm} BPM
-                          </div>
-                        </div>
-                      </div>
-                      <span className="font-mono text-xs font-bold">{track.duration}</span>
-                    </button>
-                  ))}
-                </div>
+              {/* Spotify Player Embed */}
+              <div className="w-full overflow-hidden rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 bg-black">
+                <iframe
+                  style={{ borderRadius: "12px" }}
+                  src="https://open.spotify.com/embed/playlist/4qES1KLqZgz8VTkIRdZc26?utm_source=generator&theme=0"
+                  width="100%"
+                  height="352"
+                  frameBorder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  className="w-full border-0"
+                />
               </div>
             </motion.div>
 
           </div>
         )}
 
-        {/* TAB 2: AI BOOK SHOWCASE */}
+        {/* TAB 2: AI BOOKS SHOWCASE */}
         {activeTab === "book" && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 dark:bg-slate-950 p-6 sm:p-8 rounded-3xl border border-sky-200 dark:border-sky-900/50 shadow-xl"
-          >
-            {/* Book Visual */}
-            <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800">
-              <div className="w-48 sm:w-56 h-72 rounded-2xl bg-gradient-to-br from-sky-600 via-indigo-600 to-purple-700 p-6 text-white shadow-2xl flex flex-col justify-between border border-white/20">
-                <div className="space-y-2">
-                  <span className="text-[10px] uppercase font-mono font-bold tracking-widest bg-white/20 px-2 py-0.5 rounded-full">
-                    PUBLISHED BOOK
-                  </span>
-                  <h4 className="text-lg font-black leading-tight pt-2">
-                    {PROFILE_DATA.book.title}
-                  </h4>
-                  <p className="text-xs text-sky-100 font-light">
-                    {PROFILE_DATA.book.subtitle}
-                  </p>
-                </div>
-                <div className="border-t border-white/20 pt-3 flex items-center justify-between">
-                  <span className="text-xs font-bold">William Zain</span>
-                  <BookOpen className="w-4 h-4 text-sky-200" />
-                </div>
-              </div>
-              <p className="mt-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                Available on Amazon Kindle & Paperback
-              </p>
-            </div>
+          <div className="space-y-12">
+            {PROFILE_DATA.books.map((b) => {
+              const isExpanded = expandedBookIds[b.id];
+              return (
+                <motion.div
+                  key={b.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 dark:bg-slate-950 p-6 sm:p-8 rounded-3xl border ${b.themeColor.border} shadow-xl`}
+                >
+                  {/* Book Visual */}
+                  <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800">
+                    <a
+                      href={b.amazonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group relative block overflow-hidden rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 ${b.themeColor.accentGlow}`}
+                    >
+                      <img
+                        src={b.coverImage}
+                        alt={b.title}
+                        className="w-52 sm:w-60 h-auto object-cover rounded-2xl border border-slate-200 dark:border-slate-800"
+                      />
+                    </a>
+                    <p className="mt-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                      Available on Amazon Kindle & Paperback
+                    </p>
+                  </div>
 
-            {/* Book Content Details */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="space-y-2">
-                <span className="text-xs font-mono uppercase font-bold text-sky-600 dark:text-sky-400">
-                  Authored by William Zain
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                  {PROFILE_DATA.book.title}
-                </h3>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-                  {PROFILE_DATA.book.description}
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
-                  Core Highlights
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {PROFILE_DATA.book.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                      <CheckCircle2 className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
-                      <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">{feature}</span>
+                  {/* Book Content Details */}
+                  <div className="lg:col-span-7 space-y-6">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-mono uppercase font-bold ${b.themeColor.text}`}>
+                          Authored by {b.author}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                          Amazon Publication
+                        </span>
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                        {b.title}
+                      </h3>
+                      <p className="text-xs font-mono font-semibold text-slate-600 dark:text-slate-400">
+                        {b.subtitle}
+                      </p>
+                      <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed pt-1">
+                        {b.description}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
-                <a
-                  href={PROFILE_DATA.book.amazonUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-md transition-all"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  <span>Buy on Amazon</span>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-                </a>
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
+                        Core Highlights
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {b.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                            <CheckCircle2 className={`w-4 h-4 ${b.themeColor.text} shrink-0 mt-0.5`} />
+                            <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-                <button
-                  onClick={() => setBookModalOpen(!bookModalOpen)}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold text-sm hover:border-sky-500 transition-all"
-                >
-                  <span>{bookModalOpen ? "Hide Chapter Overview" : "View Chapter Overview"}</span>
-                  <ChevronRight className={`w-4 h-4 transition-transform ${bookModalOpen ? "rotate-90" : ""}`} />
-                </button>
-              </div>
+                    <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                      <a
+                        href={b.amazonUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl ${b.themeColor.bg} text-white font-bold text-sm shadow-md transition-all`}
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        <span>Buy on Amazon</span>
+                        <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                      </a>
 
-              {bookModalOpen && (
-                <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-sky-300 dark:border-sky-700 text-xs text-slate-800 dark:text-slate-200 space-y-2">
-                  <div className="font-bold text-sky-600 dark:text-sky-400 uppercase font-mono">Chapter Overview</div>
-                  <ul className="space-y-1.5 list-disc list-inside">
-                    <li><strong>Chapter 1:</strong> ML Foundations & Neural Network Concepts</li>
-                    <li><strong>Chapter 2:</strong> Large Language Models & Generative AI</li>
-                    <li><strong>Chapter 3:</strong> Practical Prompt Workflows for Business</li>
-                    <li><strong>Chapter 4:</strong> Security, OAuth, Ethics & AI Synergy</li>
-                  </ul>
-                </div>
-              )}
-            </div>
-          </motion.div>
+                      <button
+                        onClick={() =>
+                          setExpandedBookIds((prev) => ({ ...prev, [b.id]: !prev[b.id] }))
+                        }
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold text-sm hover:border-slate-400 transition-all"
+                      >
+                        <span>{isExpanded ? "Hide Chapter Overview" : "View Chapter Overview"}</span>
+                        <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                      </button>
+                    </div>
+
+                    {isExpanded && (
+                      <div className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border ${b.themeColor.border} text-xs text-slate-800 dark:text-slate-200 space-y-2`}>
+                        <div className={`font-bold ${b.themeColor.text} uppercase font-mono`}>Chapter Overview</div>
+                        <ul className="space-y-1.5 list-disc list-inside">
+                          {b.chapters.map((ch) => (
+                            <li key={ch.number}>
+                              <strong>Chapter {ch.number}: {ch.title}</strong> – {ch.desc}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         )}
 
         {/* TAB 3: TRAVEL */}
@@ -424,8 +400,9 @@ export function CreativeHub() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-6"
+            className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-8"
           >
+            {/* Travel Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
               <div className="space-y-1">
                 <span className="text-xs font-mono uppercase font-bold text-emerald-600 dark:text-emerald-400">
@@ -434,7 +411,7 @@ export function CreativeHub() {
                 <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white">
                   I Wish You Were Here
                 </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300">
+                <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
                   Sharing travel guides, hidden gems, and cultural photography for curious explorers.
                 </p>
               </div>
@@ -443,7 +420,7 @@ export function CreativeHub() {
                 href="https://i-wish-you-were-here.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all"
+                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all shrink-0"
               >
                 <Compass className="w-4 h-4" />
                 <span>Visit Travel Blog</span>
@@ -451,7 +428,137 @@ export function CreativeHub() {
               </a>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Live RSS Feed Section */}
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Rss className="w-4 h-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                  <h4 className="text-sm font-extrabold text-slate-900 dark:text-white font-mono uppercase tracking-wider">
+                    Travel Feed Stories ({Math.min(visibleCount, rssStories.length)} of {rssStories.length || 3})
+                  </h4>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-[10px] font-mono font-bold">
+                    LIVE
+                  </span>
+                </div>
+
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingRss}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all shrink-0 disabled:opacity-50"
+                  title="Load next three stories"
+                >
+                  <ChevronDown className={`w-3.5 h-3.5 ${loadingRss ? "animate-spin" : ""}`} />
+                  <span>{loadingRss ? "Evaluating Feed..." : "Load more articles"}</span>
+                </button>
+              </div>
+
+              {loadingRss && rssStories.length === 0 ? (
+                /* Skeleton Loader */
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 animate-pulse"
+                    >
+                      <div className="w-full sm:w-44 h-32 rounded-xl bg-slate-200 dark:bg-slate-800 shrink-0" />
+                      <div className="space-y-2 flex-1 pt-1">
+                        <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/4" />
+                        <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-3/4" />
+                        <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-full" />
+                        <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : rssError ? (
+                <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center justify-between">
+                  <span>{rssError}</span>
+                  <button onClick={fetchTravelRss} className="font-bold underline ml-2">Try Again</button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {rssStories.slice(0, visibleCount).map((story, idx) => (
+                    <motion.div
+                      key={story.link || idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: (idx % 3) * 0.08 }}
+                      className="group p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-4 sm:gap-6"
+                    >
+                      {/* Left: Image Thumbnail */}
+                      <a
+                        href={story.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative w-full sm:w-48 h-40 sm:h-32 rounded-xl overflow-hidden bg-slate-950 shrink-0 block group/img"
+                      >
+                        <img
+                          src={story.image}
+                          alt={story.title}
+                          className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                        />
+                        {story.pubDate && (
+                          <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-slate-950/85 text-white text-[10px] font-mono font-bold">
+                            {story.pubDate}
+                          </span>
+                        )}
+                      </a>
+
+                      {/* Right: Topic Teaser & Link */}
+                      <div className="space-y-2 flex-1 flex flex-col justify-between self-stretch">
+                        <div className="space-y-1.5">
+                          <a
+                            href={story.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block"
+                          >
+                            <h5 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug">
+                              {story.title}
+                            </h5>
+                          </a>
+
+                          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 font-normal">
+                            {story.teaser}
+                          </p>
+                        </div>
+
+                        <div className="pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80">
+                          <a
+                            href={story.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                          >
+                            <span>Read the full story here</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+
+                          <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">
+                            i-wish-you-were-here.com
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {/* Bottom Action Button for Loading More Articles */}
+                  <div className="flex justify-center pt-2">
+                    <button
+                      onClick={handleLoadMore}
+                      disabled={loadingRss}
+                      className="inline-flex items-center gap-2 px-7 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 font-bold text-xs shadow-sm hover:shadow-md transition-all disabled:opacity-50"
+                    >
+                      <ChevronDown className={`w-4 h-4 text-emerald-600 ${loadingRss ? "animate-spin" : ""}`} />
+                      <span>{loadingRss ? "Evaluating Feed..." : "Load more articles"}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Travel Platform Categories */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-200 dark:border-slate-800">
               <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
                 <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">01 // GUIDES</div>
                 <h4 className="text-base font-bold text-slate-900 dark:text-white">Curated Travel Guides</h4>

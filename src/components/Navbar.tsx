@@ -18,7 +18,6 @@ export function Navbar() {
     { name: "About Me", href: "/about", icon: Compass, desc: "Enterprise legacy & creative pivot" },
     { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, AI Book & Travel" },
     { name: "Websites", href: "/websites", icon: Globe, desc: "Digital ecosystem & live portals" },
-    { name: "Career", href: "/career", icon: Briefcase, desc: "30+ years IT & BPM Consulting" },
     { name: "Accomplishments", href: "/accomplishments", icon: Trophy, desc: "Toastmasters DTM & Certifications" },
     { name: "Contact", href: "/contact", icon: Mail, desc: "Direct inquiries & collaboration" },
   ];

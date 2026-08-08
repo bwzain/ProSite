@@ -1,15 +1,19 @@
-"use me";
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, Copy, Check, ExternalLink, MapPin, Send, MessageSquare, Linkedin } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
 export function ContactSection() {
+  const [mounted, setMounted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(PROFILE_DATA.email);
@@ -133,10 +137,10 @@ export function ContactSection() {
                   Thank you, {formData.name}. William Zain will review your inquiry shortly.
                 </p>
               </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4" suppressHydrationWarning>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" suppressHydrationWarning>
-                  <div className="space-y-1" suppressHydrationWarning>
+            ) : mounted ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
                     <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">Your Name</label>
                     <input
                       type="text"
@@ -149,7 +153,7 @@ export function ContactSection() {
                     />
                   </div>
 
-                  <div className="space-y-1" suppressHydrationWarning>
+                  <div className="space-y-1">
                     <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">Your Email</label>
                     <input
                       type="email"
@@ -171,7 +175,7 @@ export function ContactSection() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Inquire about enterprise consulting, music production, or AI literature..."
-                    className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-sky-500 resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium focus:outline-none focus:border-sky-500 resize-none"
                   />
                 </div>
 
@@ -183,6 +187,15 @@ export function ContactSection() {
                   <span>Send Message</span>
                 </button>
               </form>
+            ) : (
+              <div className="space-y-4 animate-pulse">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="h-12 rounded-xl bg-slate-200 dark:bg-slate-800" />
+                  <div className="h-12 rounded-xl bg-slate-200 dark:bg-slate-800" />
+                </div>
+                <div className="h-28 rounded-xl bg-slate-200 dark:bg-slate-800" />
+                <div className="h-12 rounded-2xl bg-slate-200 dark:bg-slate-800" />
+              </div>
             )}
 
           </div>

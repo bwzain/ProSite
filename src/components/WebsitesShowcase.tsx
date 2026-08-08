@@ -1,4 +1,3 @@
-"use me";
 "use client";
 
 import { useState } from "react";
@@ -9,13 +8,11 @@ import { PROFILE_DATA } from "@/data/profile";
 export function WebsitesShowcase() {
   const [filter, setFilter] = useState<string>("All");
 
-  const categories = ["All", "Music", "Book", "Travel", "Enterprise", "Social"];
+  const categories = ["All", "Travel", "Book", "Social"];
 
   const categoryIcons: Record<string, any> = {
-    Music: Headphones,
-    Book: BookOpen,
     Travel: Compass,
-    Enterprise: Building2,
+    Book: BookOpen,
     Social: Share2,
   };
 
@@ -37,7 +34,7 @@ export function WebsitesShowcase() {
             Websites & <span className="text-sky-600 dark:text-sky-400">Live Portals</span>
           </h2>
           <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl font-medium">
-            Explore direct portals to William Zain's music studio, published book on Amazon, travel media, and corporate consulting ventures.
+            Explore direct portals to William Zain's travel platform, published AI books on Amazon, and official social communities.
           </p>
         </div>
 

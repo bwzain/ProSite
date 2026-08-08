@@ -1,3 +1,11 @@
+export interface RssStory {
+  title: string;
+  link: string;
+  image: string;
+  teaser: string;
+  pubDate: string;
+}
+
 export interface CareerItem {
   id: string;
   role: string;
@@ -21,6 +29,24 @@ export interface Accomplishment {
   badgeText: string;
   highlightColor: string;
   link?: string;
+}
+
+export interface BookItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  author: string;
+  coverImage: string;
+  amazonUrl: string;
+  description: string;
+  themeColor: {
+    border: string;
+    text: string;
+    bg: string;
+    accentGlow: string;
+  };
+  features: string[];
+  chapters: { number: number; title: string; desc: string }[];
 }
 
 export interface WebsiteLink {
@@ -119,6 +145,7 @@ export const PROFILE_DATA = {
     title: "Introduction to Artificial Intelligence",
     subtitle: "What you need to know to get started with AI",
     author: "William Zain",
+    coverImage: "/images/intro-to-ai-cover.png",
     amazonUrl: "https://www.amazon.com/dp/B0FG18QJWF",
     description: "A practical, approachable breakdown of AI for non-technical readers, executives, and curious creators looking to harness machine intelligence in everyday life.",
     features: [
@@ -128,6 +155,63 @@ export const PROFILE_DATA = {
       "Actionable prompt engineering techniques & toolkits"
     ]
   },
+
+  books: [
+    {
+      id: "book-1",
+      title: "Introduction to Artificial Intelligence",
+      subtitle: "What you need to know to get started with AI",
+      author: "William Zain",
+      coverImage: "/images/intro-to-ai-cover.png",
+      amazonUrl: "https://www.amazon.com/dp/B0FG18QJWF",
+      description: "A practical, approachable breakdown of AI for non-technical readers, executives, and curious creators looking to harness machine intelligence in everyday life.",
+      themeColor: {
+        border: "border-sky-200 dark:border-sky-900/50",
+        text: "text-sky-600 dark:text-sky-400",
+        bg: "bg-sky-600 hover:bg-sky-500",
+        accentGlow: "hover:shadow-sky-500/20"
+      },
+      features: [
+        "Demystifying Large Language Models (LLMs) & Neural Networks",
+        "Practical AI automation strategies for daily workflow",
+        "Ethical considerations, security & the future of creative AI",
+        "Actionable prompt engineering techniques & toolkits"
+      ],
+      chapters: [
+        { number: 1, title: "ML Foundations & Neural Network Concepts", desc: "Core algorithms, training data models, and foundational AI principles." },
+        { number: 2, title: "Large Language Models & Generative AI", desc: "Transformer architectures, attention mechanisms, and tokenization." },
+        { number: 3, title: "Practical Prompt Workflows for Business", desc: "Crafting structured prompt strategies to automate everyday tasks." },
+        { number: 4, title: "Security, OAuth, Ethics & AI Synergy", desc: "Safe deployment, data privacy compliance, and future trends." }
+      ]
+    },
+    {
+      id: "book-2",
+      title: "Generative AI for Content Creators: A Practical Guide",
+      subtitle: "Turn your ideas into stunning images, videos, and music with AI",
+      author: "William Zain",
+      coverImage: "/images/generative-ai-creators-cover.png",
+      amazonUrl: "https://www.amazon.com/dp/B0FSSRXQHJ",
+      description: "Creative Partner: A beginner's guide to building your brand with AI. Learn how to turn creative concepts into professional images, videos, music, and digital brand assets.",
+      themeColor: {
+        border: "border-pink-200 dark:border-pink-900/50",
+        text: "text-pink-600 dark:text-pink-400",
+        bg: "bg-pink-600 hover:bg-pink-500",
+        accentGlow: "hover:shadow-pink-500/20"
+      },
+      features: [
+        "Turn creative ideas into AI-generated images, videos, and soundscapes",
+        "Building a cohesive personal or corporate brand identity using AI",
+        "Hands-on guide to modern creative generative tools and prompt engineering",
+        "Actionable media production workflows for content creators and marketers"
+      ],
+      chapters: [
+        { number: 1, title: "Generative AI Foundations for Creators", desc: "Introduction to creative AI models, capabilities, and essential toolsets." },
+        { number: 2, title: "Visual AI & Prompt Design for Branding", desc: "Generating logos, graphics, brand assets, and marketing imagery." },
+        { number: 3, title: "AI Video Synthesis & Music Production", desc: "Combining AI audio engines, voice, and dynamic video generation." },
+        { number: 4, title: "Scaling Your Brand & Creative Workflows", desc: "Publishing strategy, asset management, and end-to-end automation." }
+      ]
+    }
+  ] as BookItem[],
 
   musicTracks: [
     {
@@ -209,18 +293,33 @@ export const PROFILE_DATA = {
 
   websites: [
     {
-      id: "zainy-beats",
-      title: "Zainy Beats",
-      tagline: "Music Production & Sound Design Studio",
-      url: "https://www.linkedin.com/in/bwzain",
-      category: "Music",
-      description: "Official music production hub producing soundscapes, beat arrangements, and electronic compositions using Ableton Live and modern digital audio workstations.",
-      image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop",
-      accentGlow: "from-purple-500 to-pink-500",
+      id: "travel-blog",
+      title: "I Wish You Were Here",
+      tagline: "Travel Guides, Hidden Gems & Inspiration",
+      url: "https://i-wish-you-were-here.com/",
+      category: "Travel",
+      description: "A travel platform sharing authentic travel guides, cultural insights, and hidden gems for curious explorers around the world.",
+      image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1200&auto=format&fit=crop",
+      accentGlow: "from-emerald-400 to-teal-600",
       featured: true,
       stats: [
-        { label: "Primary DAW", value: "Ableton Live" },
-        { label: "Focus", value: "Sound Design" }
+        { label: "Content", value: "Travel & Photo" },
+        { label: "Audience", value: "Global Explorers" }
+      ]
+    },
+    {
+      id: "fb-travel",
+      title: "Facebook - World Traveler",
+      tagline: "Global Travel & Photo Updates",
+      url: "https://www.facebook.com/bwzain",
+      category: "Travel",
+      description: "Official Facebook page documenting William Zain's travel adventures, photo logs, and cultural stories around the globe.",
+      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
+      accentGlow: "from-blue-500 to-teal-500",
+      featured: true,
+      stats: [
+        { label: "Platform", value: "Facebook" },
+        { label: "Focus", value: "World Traveler" }
       ]
     },
     {
@@ -239,33 +338,33 @@ export const PROFILE_DATA = {
       ]
     },
     {
-      id: "travel-blog",
-      title: "I Wish You Were Here",
-      tagline: "Travel Guides, Hidden Gems & Inspiration",
-      url: "https://i-wish-you-were-here.com/",
-      category: "Travel",
-      description: "A travel platform sharing authentic travel guides, cultural insights, and hidden gems for curious explorers around the world.",
-      image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1200&auto=format&fit=crop",
-      accentGlow: "from-emerald-400 to-teal-600",
+      id: "ai-book-creators",
+      title: "Generative AI for Content Creators",
+      tagline: "Published Book on Brand Building with AI",
+      url: "https://www.amazon.com/dp/B0FSSRXQHJ",
+      category: "Book",
+      description: "William Zain's practical guide to turning ideas into stunning images, videos, and music with generative AI.",
+      image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+      accentGlow: "from-pink-500 to-purple-600",
       featured: true,
       stats: [
-        { label: "Content", value: "Travel & Photo" },
-        { label: "Audience", value: "Global Explorers" }
+        { label: "Platform", value: "Amazon Kindle/Print" },
+        { label: "Subject", value: "Generative AI" }
       ]
     },
     {
-      id: "calance",
-      title: "Calance",
-      tagline: "Global Enterprise Technology & Consulting",
-      url: "https://www.calanceus.com/",
-      category: "Enterprise",
-      description: "Enterprise IT consulting firm where William spent 24+ years building mission-critical workflow systems, SAP ERP integrations, and cloud solutions.",
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
-      accentGlow: "from-blue-600 to-indigo-800",
-      featured: false,
+      id: "fb-author",
+      title: "Facebook - Author Page",
+      tagline: "AI Books & Literature Community",
+      url: "https://www.facebook.com/AuthorWilliamZain",
+      category: "Book",
+      description: "Official Facebook author page for William Zain's AI books, reader community, literature news, and generative tech insights.",
+      image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1200&auto=format&fit=crop",
+      accentGlow: "from-indigo-500 to-purple-600",
+      featured: true,
       stats: [
-        { label: "Role", value: "Technical Consultant" },
-        { label: "Tenure", value: "24+ Years" }
+        { label: "Platform", value: "Facebook" },
+        { label: "Focus", value: "Author & AI Literature" }
       ]
     },
     {
@@ -419,11 +518,11 @@ export const PROFILE_DATA = {
       category: "Publication",
       issuer: "Amazon Publishing",
       year: "2025",
-      description: "Author of 'Introduction to Artificial Intelligence: What you need to know to get started with AI'.",
+      description: "Author of 'Introduction to Artificial Intelligence' and 'Generative AI for Content Creators'.",
       iconName: "BookOpen",
-      badgeText: "Published Book",
+      badgeText: "Amazon Author Page",
       highlightColor: "from-cyan-400 to-blue-600",
-      link: "https://www.amazon.com/dp/B0FG18QJWF"
+      link: "https://www.amazon.com/stores/William-Zain/author/B0FFN749GN"
     },
     {
       id: "acc-aws",

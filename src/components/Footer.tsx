@@ -1,4 +1,3 @@
-"use me";
 "use client";
 
 import { useState, useEffect } from "react";
@@ -75,7 +74,6 @@ export function Footer() {
             <Link href="/about" className="hover:text-sky-600 transition-colors">About</Link>
             <Link href="/creations" className="hover:text-sky-600 transition-colors">Creations</Link>
             <Link href="/websites" className="hover:text-sky-600 transition-colors">Websites</Link>
-            <Link href="/career" className="hover:text-sky-600 transition-colors">Career</Link>
             <Link href="/accomplishments" className="hover:text-sky-600 transition-colors">Accomplishments</Link>
             <Link href="/contact" className="hover:text-sky-600 transition-colors">Contact</Link>
           </div>

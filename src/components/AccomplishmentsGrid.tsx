@@ -1,4 +1,3 @@
-"use me";
 "use client";
 
 import { useState } from "react";
@@ -90,7 +89,19 @@ export function AccomplishmentsGrid() {
                       {acc.issuer} • {acc.year}
                     </span>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                      {acc.title}
+                      {acc.link ? (
+                        <a
+                          href={acc.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline inline-flex items-center gap-1.5"
+                        >
+                          <span>{acc.title}</span>
+                          <ExternalLink className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                        </a>
+                      ) : (
+                        acc.title
+                      )}
                     </h3>
                   </div>
 

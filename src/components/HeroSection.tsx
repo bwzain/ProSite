@@ -1,4 +1,3 @@
-"use me";
 "use client";
 
 import { motion } from "framer-motion";
@@ -78,17 +77,8 @@ export function HeroSection() {
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-lg shadow-sky-600/30 hover:scale-[1.02] active:scale-95 transition-all"
             >
               <Headphones className="w-4 h-4" />
-              <span>Explore Music & AI Book</span>
+              <span>Explore Music & AI Books</span>
               <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              href="/career"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm hover:border-sky-500 hover:scale-[1.02] transition-all shadow-sm"
-            >
-              <Cpu className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-              <span>View Enterprise Career</span>
-              <ChevronRight className="w-4 h-4 opacity-70" />
             </Link>
 
             <a
