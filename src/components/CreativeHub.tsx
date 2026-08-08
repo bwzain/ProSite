@@ -1,14 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Headphones, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, Play, X, ChevronDown, Rss } from "lucide-react";
 import { PROFILE_DATA, YouTubeVideo, RssStory } from "@/data/profile";
 
 export function CreativeHub() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"beats" | "book" | "travel">("beats");
   const [expandedBookIds, setExpandedBookIds] = useState<Record<string, boolean>>({});
   const [activeVideoModal, setActiveVideoModal] = useState<YouTubeVideo | null>(null);
+
+  useEffect(() => {
+    const tabParam = searchParams ? searchParams.get("tab") : null;
+    if (tabParam === "book" || tabParam === "beats" || tabParam === "travel") {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   // RSS Feed state
   const [rssStories, setRssStories] = useState<RssStory[]>([]);

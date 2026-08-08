@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { CreativeHub } from "@/components/CreativeHub";
 
 export const metadata = {
@@ -8,7 +9,9 @@ export const metadata = {
 export default function CreationsPage() {
   return (
     <div className="pt-16">
-      <CreativeHub />
+      <Suspense fallback={<div className="min-h-screen bg-slate-50 dark:bg-slate-950" />}>
+        <CreativeHub />
+      </Suspense>
     </div>
   );
 }

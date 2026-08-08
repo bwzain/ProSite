@@ -25,7 +25,7 @@ export function Navbar() {
   const navItems = [
     { name: "Overview", href: "/", icon: Sparkles, desc: "Portfolio summary & quick spotlights" },
     { name: "About Me", href: "/about", icon: Compass, desc: "Enterprise legacy & creative pivot" },
-    { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, AI Book & Travel" },
+    { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, AI Books & Travel" },
     { name: "Websites", href: "/websites", icon: Globe, desc: "Digital ecosystem & live portals" },
     { name: "Accomplishments", href: "/accomplishments", icon: Trophy, desc: "Toastmasters DTM & Certifications" },
     { name: "Contact", href: "/contact", icon: Mail, desc: "Direct inquiries & collaboration" },
@@ -95,17 +95,15 @@ export function Navbar() {
             <span>AI Twin Chat</span>
           </Link>
 
-          {/* AI Book Quick Link */}
-          <a
-            href={PROFILE_DATA.book.amazonUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90 transition-all"
+          {/* AI Books Button */}
+          <Link
+            href="/creations?tab=book"
+            onClick={() => handleNavClick("/creations")}
+            className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all"
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>AI Book</span>
-            <ExternalLink className="w-3 h-3 opacity-80" />
-          </a>
+            <span>AI Books</span>
+          </Link>
 
           {/* Mobile / Full Menu Drawer Toggle */}
           <button

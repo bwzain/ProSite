@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { AboutSection } from "@/components/AboutSection";
 import { CreativeHub } from "@/components/CreativeHub";
@@ -10,7 +11,9 @@ export default function HomePage() {
     <div>
       <HeroSection />
       <AboutSection />
-      <CreativeHub />
+      <Suspense fallback={<div className="py-20 bg-white dark:bg-slate-900" />}>
+        <CreativeHub />
+      </Suspense>
       <WebsitesShowcase />
       <AccomplishmentsGrid />
       <ContactSection />
