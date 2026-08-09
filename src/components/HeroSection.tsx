@@ -87,21 +87,21 @@ export function HeroSection() {
           </div>
 
           {/* Right Column: Featured Self-Portrait Spotlight */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-none group">
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-xs sm:max-w-sm lg:max-w-[320px] group">
               
               {/* Outer Glowing Gradient Frame */}
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 opacity-30 group-hover:opacity-60 blur-xl transition-all duration-500"></div>
 
               {/* Portrait Container */}
               <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">
-                <div className="relative aspect-[4/5] sm:aspect-[3/4] w-full overflow-hidden bg-slate-950">
+                <div className="relative aspect-[3/3.8] w-full overflow-hidden bg-slate-950">
                   <Image
                     src="/images/self-portrait.png"
                     alt="William Zain Self Portrait"
                     fill
                     priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                    sizes="(max-width: 768px) 100vw, 320px"
                     className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   />
                   
