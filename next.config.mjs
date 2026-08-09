@@ -20,6 +20,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.ytimg.com",
       },
+      {
+        protocol: "https",
+        hostname: "i-wish-you-were-here.com",
+      },
+      {
+        protocol: "http",
+        hostname: "i-wish-you-were-here.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.i-wish-you-were-here.com",
+      },
     ],
   },
 };

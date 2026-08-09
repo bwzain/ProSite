@@ -170,6 +170,7 @@ export function CreativeHubSpotlight() {
                   src={topRssStory?.image || defaultTravelImage}
                   alt={topRssStory?.title || "I Wish You Were Here Travel"}
                   fill
+                  unoptimized={!!topRssStory?.image}
                   sizes="(max-width: 768px) 100vw, 380px"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
