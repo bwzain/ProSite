@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { BookOpen, ExternalLink, Calendar, Tag, RefreshCw, Sparkles, Search } from "lucide-react";
+import { BookOpen, ExternalLink, Calendar, Tag, RefreshCw, Search, X, Sparkles } from "lucide-react";
 import { BlogPost, FALLBACK_BLOGS } from "@/lib/notion";
 
 export function BlogSection() {
@@ -11,6 +11,7 @@ export function BlogSection() {
   const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   const fetchBlogs = async () => {
     setLoading(true);
@@ -130,7 +131,10 @@ export function BlogSection() {
             >
               <div>
                 {/* Image Banner */}
-                <div className="relative h-48 w-full overflow-hidden bg-slate-950">
+                <div
+                  onClick={() => setSelectedPost(post)}
+                  className="relative h-48 w-full overflow-hidden bg-slate-950 cursor-pointer"
+                >
                   <Image
                     src={post.image}
                     alt={post.title}
@@ -155,7 +159,10 @@ export function BlogSection() {
                     <span>{post.date}</span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors leading-snug">
+                  <h3
+                    onClick={() => setSelectedPost(post)}
+                    className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors leading-snug cursor-pointer"
+                  >
                     {post.title}
                   </h3>
 
@@ -165,22 +172,35 @@ export function BlogSection() {
                 </div>
               </div>
 
-              {/* Card Footer CTA */}
-              <div className="p-6 pt-0">
+              {/* Card Two Buttons Footer CTA */}
+              <div className="p-6 pt-0 flex items-center gap-2">
+                {/* 1. Read Article Button */}
+                <button
+                  onClick={() => setSelectedPost(post)}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition-all shadow-sm"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Read Article</span>
+                </button>
+
+                {/* 2. Source Button */}
                 {post.sourceUrl ? (
                   <a
                     href={post.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 text-slate-900 dark:text-slate-100 font-bold text-xs transition-all border border-slate-300 dark:border-slate-700 shadow-sm"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition-all shadow-sm"
                   >
-                    <span>Read Article / Source</span>
+                    <span>Source</span>
                     <ExternalLink className="w-3.5 h-3.5 opacity-80" />
                   </a>
                 ) : (
-                  <div className="w-full text-center py-2 text-xs font-mono text-slate-400 italic">
-                    Published in Notion
-                  </div>
+                  <button
+                    disabled
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/40 text-slate-400 font-bold text-xs border border-slate-200 dark:border-slate-800 cursor-not-allowed"
+                  >
+                    <span>No Source</span>
+                  </button>
                 )}
               </div>
 
@@ -198,6 +218,100 @@ export function BlogSection() {
         )}
 
       </div>
+
+      {/* READ ARTICLE FULL DETAIL MODAL */}
+      {selectedPost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8 space-y-6 my-auto">
+            
+            {/* Modal Header Bar */}
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 border border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-300 text-xs font-mono font-bold uppercase">
+                  <Tag className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                  {selectedPost.category}
+                </span>
+                <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-purple-500" />
+                  {selectedPost.date}
+                </span>
+              </div>
+
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+                aria-label="Close article modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Split Layout: Image on Left/Top, Description next to Image */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start">
+              
+              {/* Image Column */}
+              <div className="md:col-span-5 relative aspect-square sm:aspect-[4/3] md:aspect-[3/4] w-full rounded-2xl overflow-hidden bg-slate-950 shadow-lg border border-slate-200 dark:border-slate-800 shrink-0">
+                <Image
+                  src={selectedPost.image}
+                  alt={selectedPost.title}
+                  fill
+                  unoptimized={selectedPost.image.startsWith("http")}
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Full Description & Details Column */}
+              <div className="md:col-span-7 space-y-4 flex flex-col justify-between h-full">
+                <div className="space-y-3">
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
+                    {selectedPost.title}
+                  </h3>
+
+                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                    <h4 className="text-xs font-mono uppercase font-bold text-purple-600 dark:text-purple-400 mb-2">
+                      Article Summary & Content
+                    </h4>
+                    <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-normal whitespace-pre-line">
+                      {selectedPost.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Modal Footer CTAs */}
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  {selectedPost.sourceUrl ? (
+                    <a
+                      href={selectedPost.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition-all"
+                    >
+                      <span>Visit External Source / Link</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  ) : (
+                    <span className="text-xs font-mono text-slate-400 italic">
+                      Published directly in Notion
+                    </span>
+                  )}
+
+                  <button
+                    onClick={() => setSelectedPost(null)}
+                    className="px-5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs transition-all"
+                  >
+                    Close
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }
