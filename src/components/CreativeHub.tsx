@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Headphones, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, Play, X, ChevronDown, Rss } from "lucide-react";
 import { PROFILE_DATA, YouTubeVideo, RssStory } from "@/data/profile";
@@ -11,6 +12,7 @@ export function CreativeHub() {
   const [activeTab, setActiveTab] = useState<"beats" | "book" | "travel">("beats");
   const [expandedBookIds, setExpandedBookIds] = useState<Record<string, boolean>>({});
   const [activeVideoModal, setActiveVideoModal] = useState<YouTubeVideo | null>(null);
+  const [loadSpotifyPlayer, setLoadSpotifyPlayer] = useState(false);
 
   useEffect(() => {
     const tabParam = searchParams ? searchParams.get("tab") : null;
@@ -57,7 +59,6 @@ export function CreativeHub() {
     if (visibleCount < rssStories.length) {
       setVisibleCount((prev) => Math.min(prev + 3, rssStories.length));
     } else {
-      // Re-evaluate feed if we reached end of current stories array
       setLoadingRss(true);
       await fetchTravelRss();
       setVisibleCount((prev) => prev + 3);
@@ -134,11 +135,7 @@ export function CreativeHub() {
           <div className="space-y-12">
             
             {/* YouTube Playlist Tiles Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-purple-200 dark:border-purple-900/50 shadow-xl space-y-6"
-            >
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-purple-200 dark:border-purple-900/50 shadow-xl space-y-6">
               {/* Playlist Header */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
                 <div className="space-y-1">
@@ -170,38 +167,37 @@ export function CreativeHub() {
 
               {/* 4 Video Tiles Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {playlist.videos.map((video, idx) => (
-                  <motion.div
+                {playlist.videos.map((video) => (
+                  <div
                     key={video.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: idx * 0.05 }}
-                    className="group rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-500 overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between"
+                    className="group rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-500 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
                   >
                     {/* Thumbnail with Play Overlay */}
                     <div
                       onClick={() => setActiveVideoModal(video)}
                       className="relative h-44 w-full cursor-pointer overflow-hidden bg-slate-950 group"
                     >
-                      <img
+                      <Image
                         src={video.thumbnail}
                         alt={video.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        loading="lazy"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/20 transition-colors flex items-center justify-center">
+                      <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/20 transition-colors flex items-center justify-center z-10">
                         <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                           <Play className="w-5 h-5 ml-0.5" />
                         </div>
                       </div>
 
                       {/* Duration Badge */}
-                      <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-slate-950/90 text-white text-[10px] font-mono font-bold">
+                      <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-slate-950/90 text-white text-[10px] font-mono font-bold z-10">
                         {video.duration}
                       </span>
 
                       {/* Video Tag */}
-                      <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-200 border border-purple-500/40 text-[10px] font-mono font-bold">
+                      <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-200 border border-purple-500/40 text-[10px] font-mono font-bold z-10">
                         {video.genre}
                       </span>
                     </div>
@@ -237,17 +233,13 @@ export function CreativeHub() {
                         </a>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Spotify Embedded Playlist Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-6"
-            >
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-6">
               {/* Header */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
                 <div className="space-y-1">
@@ -277,20 +269,40 @@ export function CreativeHub() {
                 </a>
               </div>
 
-              {/* Spotify Player Embed */}
-              <div className="w-full overflow-hidden rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 bg-black">
-                <iframe
-                  style={{ borderRadius: "12px" }}
-                  src="https://open.spotify.com/embed/playlist/4qES1KLqZgz8VTkIRdZc26?utm_source=generator&theme=0"
-                  width="100%"
-                  height="352"
-                  frameBorder="0"
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                  className="w-full border-0"
-                />
+              {/* Spotify Player Embed Facade for High Performance */}
+              <div className="w-full overflow-hidden rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 bg-slate-950">
+                {loadSpotifyPlayer ? (
+                  <iframe
+                    style={{ borderRadius: "12px" }}
+                    src="https://open.spotify.com/embed/playlist/4qES1KLqZgz8VTkIRdZc26?utm_source=generator&theme=0"
+                    width="100%"
+                    height="352"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className="w-full border-0"
+                  />
+                ) : (
+                  <div
+                    onClick={() => setLoadSpotifyPlayer(true)}
+                    className="relative w-full h-[280px] sm:h-[352px] bg-gradient-to-br from-slate-950 via-emerald-950/40 to-slate-900 flex flex-col items-center justify-center p-6 text-center cursor-pointer group transition-all"
+                  >
+                    <div className="w-16 h-16 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform mb-4">
+                      <Play className="w-8 h-8 ml-1 fill-slate-950" />
+                    </div>
+                    <h4 className="text-lg sm:text-xl font-extrabold text-white group-hover:text-emerald-400 transition-colors">
+                      Click to Stream Zainy Beats on Spotify
+                    </h4>
+                    <p className="text-xs text-slate-400 max-w-md mt-1.5 font-medium">
+                      Load full interactive player for official synthwave, lofi & ambient studio releases.
+                    </p>
+                    <span className="mt-4 px-5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">
+                      Interactive Spotify Player
+                    </span>
+                  </div>
+                )}
               </div>
-            </motion.div>
+            </div>
 
           </div>
         )}
@@ -301,10 +313,8 @@ export function CreativeHub() {
             {PROFILE_DATA.books.map((b) => {
               const isExpanded = expandedBookIds[b.id];
               return (
-                <motion.div
+                <div
                   key={b.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
                   className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 dark:bg-slate-950 p-6 sm:p-8 rounded-3xl border ${b.themeColor.border} shadow-xl`}
                 >
                   {/* Book Visual */}
@@ -315,9 +325,13 @@ export function CreativeHub() {
                       rel="noopener noreferrer"
                       className={`group relative block overflow-hidden rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 ${b.themeColor.accentGlow}`}
                     >
-                      <img
+                      <Image
                         src={b.coverImage}
                         alt={b.title}
+                        width={240}
+                        height={340}
+                        sizes="240px"
+                        loading="lazy"
                         className="w-52 sm:w-60 h-auto object-cover rounded-2xl border border-slate-200 dark:border-slate-800"
                       />
                     </a>
@@ -398,7 +412,7 @@ export function CreativeHub() {
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
@@ -406,11 +420,7 @@ export function CreativeHub() {
 
         {/* TAB 3: TRAVEL */}
         {activeTab === "travel" && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-8"
-          >
+          <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-emerald-200 dark:border-emerald-900/50 shadow-xl space-y-8">
             {/* Travel Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
               <div className="space-y-1">
@@ -487,12 +497,9 @@ export function CreativeHub() {
               ) : (
                 <div className="space-y-4">
                   {rssStories.slice(0, visibleCount).map((story, idx) => (
-                    <motion.div
+                    <div
                       key={story.link || idx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: (idx % 3) * 0.08 }}
-                      className="group p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-4 sm:gap-6"
+                      className="group p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row items-start gap-4 sm:gap-6"
                     >
                       {/* Left: Image Thumbnail */}
                       <a
@@ -504,6 +511,7 @@ export function CreativeHub() {
                         <img
                           src={story.image}
                           alt={story.title}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
                         />
                         {story.pubDate && (
@@ -548,7 +556,7 @@ export function CreativeHub() {
                           </span>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
 
                   {/* Bottom Action Button for Loading More Articles */}
@@ -592,7 +600,7 @@ export function CreativeHub() {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
       </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Globe, ExternalLink, Headphones, BookOpen, Compass, Building2, Share2, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Globe, ExternalLink, BookOpen, Compass, Share2, Sparkles } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
 export function WebsitesShowcase() {
@@ -57,32 +57,32 @@ export function WebsitesShowcase() {
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredWebsites.map((website, idx) => {
+          {filteredWebsites.map((website) => {
             const CategoryIcon = categoryIcons[website.category] || Globe;
             return (
-              <motion.div
+              <div
                 key={website.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className="group rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-500 overflow-hidden shadow-lg transition-all flex flex-col justify-between"
+                className="group rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-500 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 {/* Image Banner */}
-                <div className="relative h-48 w-full overflow-hidden bg-slate-900">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 opacity-75 group-hover:opacity-90"
-                    style={{ backgroundImage: `url(${website.image})` }}
+                <div className="relative h-48 w-full overflow-hidden bg-slate-950">
+                  <Image
+                    src={website.image}
+                    alt={website.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    loading="lazy"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-75 group-hover:opacity-90"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent pointer-events-none" />
                   
-                  <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700 backdrop-blur-md text-sky-300 text-[10px] font-mono font-bold uppercase">
+                  <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700 backdrop-blur-md text-sky-300 text-[10px] font-mono font-bold uppercase z-10">
                     <CategoryIcon className="w-3 h-3 text-sky-400" />
                     <span>{website.category}</span>
                   </div>
 
                   {website.featured && (
-                    <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-950/90 border border-purple-500 text-purple-200 text-[10px] font-mono font-bold">
+                    <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-950/90 border border-purple-500 text-purple-200 text-[10px] font-mono font-bold z-10">
                       <Sparkles className="w-3 h-3 text-purple-300" />
                       <span>Featured</span>
                     </div>
@@ -127,7 +127,7 @@ export function WebsitesShowcase() {
                   </div>
                 </div>
 
-              </motion.div>
+              </div>
             );
           })}
         </div>

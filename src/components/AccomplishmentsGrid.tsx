@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Trophy, Award, BookOpen, Cloud, Bot, ShieldCheck, Lock, GraduationCap, Code, ExternalLink } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
@@ -63,16 +62,12 @@ export function AccomplishmentsGrid() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAccomplishments.map((acc, idx) => {
+          {filteredAccomplishments.map((acc) => {
             const IconComponent = iconMap[acc.iconName] || Award;
             return (
-              <motion.div
+              <div
                 key={acc.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className="group p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-md transition-all flex flex-col justify-between"
+                className="group p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -127,7 +122,7 @@ export function AccomplishmentsGrid() {
                   )}
                 </div>
 
-              </motion.div>
+              </div>
             );
           })}
         </div>

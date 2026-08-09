@@ -1,10 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Mail, Copy, Check, ExternalLink, MapPin, Send, MessageSquare, Linkedin, Bot, Sparkles } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
-import { DigitalTwinChat } from "./DigitalTwinChat";
+
+const DigitalTwinChat = dynamic(
+  () => import("./DigitalTwinChat").then((mod) => mod.DigitalTwinChat),
+  {
+    loading: () => (
+      <div className="w-full h-[620px] rounded-3xl bg-slate-100 dark:bg-slate-900 animate-pulse border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 font-mono text-xs">
+        Loading Digital Twin AI...
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 export function ContactSection() {
   const [mounted, setMounted] = useState(false);
