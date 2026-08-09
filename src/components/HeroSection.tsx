@@ -60,7 +60,7 @@ export function HeroSection() {
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white font-extrabold text-xs sm:text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
               >
                 <Bot className="w-4 h-4 text-cyan-200" />
-                <span>Chat with AI Twin</span>
+                <span>Chat with my AI Twin</span>
                 <ArrowRight className="w-4 h-4 text-cyan-200" />
               </Link>
 

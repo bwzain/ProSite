@@ -18,7 +18,7 @@ export function FloatingChatButton() {
           <Bot className="w-5 h-5 text-cyan-200" />
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
         </div>
-        <span>Chat with AI Twin</span>
+        <span>Chat with my AI Twin</span>
         <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
       </Link>
     </div>
