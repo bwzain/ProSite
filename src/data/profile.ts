@@ -102,7 +102,7 @@ export const PROFILE_DATA = {
   stats: [
     { label: "Years in Enterprise Tech", value: "30+" },
     { label: "Automation Solutions Built", value: "100s" },
-    { label: "Published Books", value: "1" },
+    { label: "Published Books", value: "2" },
     { label: "Toastmasters Distinction", value: "DTM" },
   ],
 
