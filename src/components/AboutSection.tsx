@@ -1,8 +1,5 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Image from "next/image";
-import { Headphones, BookOpen, Cpu, Compass, CheckCircle2, Shield, MapPin, Award, Mail } from "lucide-react";
+import { Headphones, BookOpen, Cpu, Compass, CheckCircle2, Shield, Award } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
 export function AboutSection() {
@@ -36,12 +33,7 @@ export function AboutSection() {
           
           {/* Left Column: Executive Story Card with Integrated Portrait */}
           <div className="lg:col-span-7 space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden"
-            >
+            <div className="space-y-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
               {/* Executive Bio Header Card */}
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
                 <div className="relative w-28 h-36 sm:w-32 sm:h-40 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-200 dark:border-slate-700 shadow-lg bg-slate-950">
@@ -97,7 +89,7 @@ export function AboutSection() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right Column: Pillars List */}
