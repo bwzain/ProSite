@@ -6,7 +6,7 @@ import { BookOpen, ExternalLink, Calendar, Tag, RefreshCw, Search, X, Sparkles }
 import { BlogPost, FALLBACK_BLOGS } from "@/lib/notion";
 
 export function BlogSection() {
-  const [blogs, setBlogs] = useState<BlogPost[]>(FALLBACK_BLOGS);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
