@@ -52,33 +52,6 @@ export function BlogSection() {
     <section className="py-20 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
-        <div className="flex flex-col items-center text-center space-y-3 mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-100 dark:bg-purple-950/80 border border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-300 text-xs font-mono uppercase font-bold tracking-wider">
-            <BookOpen className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-            <span>Notion-Powered Blog & Insights</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Articles, Guides & <span className="text-purple-600 dark:text-purple-400">Thought Leadership</span>
-          </h2>
-          <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl font-medium">
-            Insights on Artificial Intelligence, Enterprise Automation, Music Soundscapes, and Global Travel — published directly from Notion.
-          </p>
-
-          <div className="flex items-center gap-2 pt-2 text-xs font-mono text-slate-500">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Live Notion CMS Integration</span>
-            <button
-              onClick={fetchBlogs}
-              disabled={loading}
-              className="ml-2 inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 hover:underline font-bold"
-            >
-              <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} />
-              <span>Refresh</span>
-            </button>
-          </div>
-        </div>
-
         {/* Controls Bar: Search & Categories */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b border-slate-200 dark:border-slate-800">
           
