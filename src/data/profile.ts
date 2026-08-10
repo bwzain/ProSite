@@ -123,7 +123,7 @@ export const PROFILE_DATA = {
       {
         title: "AI Author & Educator",
         subtitle: "Published Work",
-        description: "Author of 'Introduction to Artificial Intelligence', demystifying generative AI, machine learning, and automation for everyday creators.",
+        description: "Author of 'Introduction to Artificial Intelligence' and 'Generative AI for Content Creators', demystifying generative AI, machine learning, and automation for everyday creators.",
         icon: "BookOpen"
       },
       {

@@ -19,7 +19,7 @@ export const FALLBACK_BLOGS: BlogPost[] = [
     description: "How practical prompt engineering and machine learning tools can transform daily content production workflows without needing a CS degree.",
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
     sourceUrl: "https://www.amazon.com/dp/B0FG18QJWF",
-    category: "Artificial Intelligence",
+    category: "AI",
     date: "2026-08-01",
   },
   {
@@ -37,8 +37,17 @@ export const FALLBACK_BLOGS: BlogPost[] = [
     description: "Inside the Zainy Beats studio: designing atmospheric textures, analog synth patches, and chill lofi grooves in Ableton Live.",
     image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop",
     sourceUrl: "https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26",
-    category: "Music Production",
+    category: "Music",
     date: "2026-07-10",
+  },
+  {
+    id: "sample-4",
+    title: "Hidden Gems & Cultural Expeditions: I Wish You Were Here",
+    description: "Authentic travel guides, cultural insights, and hidden gems documented across global journeys for curious explorers.",
+    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1200&auto=format&fit=crop",
+    sourceUrl: "https://i-wish-you-were-here.com",
+    category: "Travel",
+    date: "2026-06-25",
   },
 ];
 

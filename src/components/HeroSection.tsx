@@ -73,13 +73,13 @@ export function HeroSection() {
               </Link>
 
               <a
-                href={PROFILE_DATA.book.amazonUrl}
+                href="https://www.amazon.com/stores/William-Zain/author/B0FFN749GN"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
               >
                 <BookOpen className="w-4 h-4" />
-                <span>Buy Book</span>
+                <span>Buy AI Books</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-80" />
               </a>
             </div>

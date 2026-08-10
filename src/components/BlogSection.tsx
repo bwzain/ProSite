@@ -36,12 +36,44 @@ export function BlogSection() {
     fetchBlogs();
   }, []);
 
-  // Extract unique categories
-  const categories = ["All", ...Array.from(new Set(blogs.map((b) => b.category).filter(Boolean)))];
+  // Helper function to check if a blog's category matches the selected category filter
+  const matchesCategoryFilter = (blogCat: string, activeCat: string) => {
+    if (activeCat === "All") return true;
+    const catLower = (blogCat || "").toLowerCase();
+    const activeLower = activeCat.toLowerCase();
+
+    if (activeLower === "ai") {
+      return catLower.includes("ai") || catLower.includes("artificial intelligence") || catLower.includes("book") || catLower.includes("literature");
+    }
+    if (activeLower === "music") {
+      return catLower.includes("music") || catLower.includes("audio") || catLower.includes("beat") || catLower.includes("sound");
+    }
+    if (activeLower === "travel") {
+      return catLower.includes("travel") || catLower.includes("story") || catLower.includes("media") || catLower.includes("guide");
+    }
+    return catLower === activeLower || catLower.includes(activeLower) || activeLower.includes(catLower);
+  };
+
+  // Build category list ensuring All, AI, Music, Travel are prominently positioned
+  const standardCategories = ["All", "AI", "Music", "Travel"];
+  const otherCategories = Array.from(
+    new Set(
+      blogs
+        .map((b) => b.category)
+        .filter(Boolean)
+        .filter(
+          (c) =>
+            !matchesCategoryFilter(c, "AI") &&
+            !matchesCategoryFilter(c, "Music") &&
+            !matchesCategoryFilter(c, "Travel")
+        )
+    )
+  );
+  const categories = [...standardCategories, ...otherCategories];
 
   // Filtered blogs
   const filteredBlogs = blogs.filter((blog) => {
-    const matchesCategory = activeCategory === "All" || blog.category === activeCategory;
+    const matchesCategory = matchesCategoryFilter(blog.category, activeCategory);
     const matchesSearch =
       blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       blog.description.toLowerCase().includes(searchQuery.toLowerCase());
