@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,6 +13,26 @@ export function CreativeHub() {
   const [expandedBookIds, setExpandedBookIds] = useState<Record<string, boolean>>({});
   const [activeVideoModal, setActiveVideoModal] = useState<YouTubeVideo | null>(null);
   const [loadSpotifyPlayer, setLoadSpotifyPlayer] = useState(false);
+  const spotifyRef = useRef<HTMLDivElement>(null);
+
+  // Lazy-load Spotify player when scrolled into view
+  useEffect(() => {
+    if (!spotifyRef.current || loadSpotifyPlayer) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setLoadSpotifyPlayer(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    observer.observe(spotifyRef.current);
+
+    return () => observer.disconnect();
+  }, [loadSpotifyPlayer]);
 
   useEffect(() => {
     const tabParam = searchParams ? searchParams.get("tab") : null;
@@ -269,8 +289,8 @@ export function CreativeHub() {
                 </a>
               </div>
 
-              {/* Spotify Player Embed Facade for High Performance */}
-              <div className="w-full overflow-hidden rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 bg-slate-950">
+              {/* Spotify Player Embed Facade for High Performance & Lazy Loading */}
+              <div ref={spotifyRef} className="w-full overflow-hidden rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 bg-slate-950">
                 {loadSpotifyPlayer ? (
                   <iframe
                     style={{ borderRadius: "12px" }}

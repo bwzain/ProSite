@@ -119,7 +119,7 @@ export const PROFILE_DATA = {
       {
         title: "Digital Music Production",
         subtitle: "Zainy Beats",
-        description: "Designing soundscapes, electronic beats, and atmospheric music using Ableton Live and advanced digital synthesizer tech.",
+        description: "Designing soundscapes, electronic beats, and atmospheric music using the latest digital tools and AI. I started my music journey at a very young age, trying various instruments. Later, I became the keyboardist of a local boy band playing covers and just having a blast. ",
         icon: "Headphones"
       },
       {
