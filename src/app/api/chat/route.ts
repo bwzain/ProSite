@@ -187,8 +187,14 @@ ${selectiveContext}
       parts: [{ text: m.content }],
     }));
 
-    // List of Gemini models to try in sequence for high availability
-    const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    // List of active Gemini models to try in sequence for high availability
+    const modelsToTry = [
+      "gemini-3.6-flash",
+      "gemini-3.5-flash",
+      "gemini-flash-latest",
+      "gemma-4-31b-it",
+      "gemini-3.1-pro-preview"
+    ];
 
     let replyText = "";
     let modelUsed = "";
