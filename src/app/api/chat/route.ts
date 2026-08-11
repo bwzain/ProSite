@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PROFILE_DATA } from "@/data/profile";
+import { getNotionBlogPosts } from "@/lib/notion";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,33 @@ const FALLBACK_MODELS = [
   "google/gemma-4-26b-a4b-it:free",
   "nvidia/nemotron-3-nano-30b-a3b:free",
 ];
+
+// Helper to fetch RSS stories on demand for travel queries
+async function fetchRssFeedForChat() {
+  try {
+    const res = await fetch("https://i-wish-you-were-here.com/rss.xml", {
+      headers: { "User-Agent": "Mozilla/5.0" },
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const xmlText = await res.text();
+    const itemsRaw = xmlText.split("<item>").slice(1, 4); // top 3 stories
+    const stories = itemsRaw.map((item) => {
+      const titleMatch = item.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i);
+      const linkMatch = item.match(/<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i);
+      const descMatch = item.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i);
+      const title = titleMatch ? titleMatch[1].replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() : "";
+      const link = linkMatch ? linkMatch[1].trim() : "https://i-wish-you-were-here.com/";
+      let rawDesc = descMatch ? descMatch[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
+      if (rawDesc.length > 180) rawDesc = rawDesc.substring(0, 177) + "...";
+      return { title, link, teaser: rawDesc };
+    });
+    return stories.filter((s) => s.title);
+  } catch (err) {
+    console.warn("Chat RSS fetch failed:", err);
+    return [];
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -29,6 +57,73 @@ export async function POST(req: Request) {
         { error: "OpenRouter API key is missing from environment variables." },
         { status: 500 }
       );
+    }
+
+    // Inspect user's last message for selective context injection
+    const lastUserMessage = (messages[messages.length - 1]?.content || "").toLowerCase();
+
+    // Trigger keyword lists
+    const blogTriggers = ["blog", "articles", "insights", "hacks", "tips"];
+    const travelTriggers = ["travel", "trips", "stories", "places", "adventures", "must see", "tours"];
+    const musicTriggers = ["music", "beats", "tracks", "songs", "youtube", "spotify", "playlist", "zainy"];
+
+    const containsTrigger = (text: string, triggers: string[]) => {
+      return triggers.some((trig) => {
+        if (trig.includes(" ")) {
+          return text.includes(trig);
+        }
+        const regex = new RegExp(`\\b${trig}\\b`, "i");
+        return regex.test(text);
+      });
+    };
+
+    const shouldFetchBlogs = containsTrigger(lastUserMessage, blogTriggers);
+    const shouldFetchTravel = containsTrigger(lastUserMessage, travelTriggers);
+    const shouldFetchMusic = containsTrigger(lastUserMessage, musicTriggers);
+
+    let selectiveContext = "";
+
+    // 1. SELECTIVE NOTION BLOG FETCH
+    if (shouldFetchBlogs) {
+      try {
+        const blogPosts = await getNotionBlogPosts();
+        if (blogPosts && blogPosts.length > 0) {
+          const topBlogs = blogPosts
+            .slice(0, 4)
+            .map((b) => `- "${b.title}" (${b.category}): ${b.description} [Read article](${b.sourceUrl || '/blog'})`)
+            .join("\n");
+          selectiveContext += `\n\n### LIVE NOTION BLOG POSTS ATTACHED ON-DEMAND:\n${topBlogs}`;
+        }
+      } catch (e) {
+        console.warn("Failed to fetch dynamic Notion blogs for chat context", e);
+      }
+    }
+
+    // 2. SELECTIVE RSS TRAVEL FEED FETCH
+    if (shouldFetchTravel) {
+      try {
+        const rssStories = await fetchRssFeedForChat();
+        if (rssStories && rssStories.length > 0) {
+          const topTravel = rssStories
+            .map((s) => `- "${s.title}": ${s.teaser} [Read full story](${s.link})`)
+            .join("\n");
+          selectiveContext += `\n\n### LIVE RSS TRAVEL STORIES ATTACHED ON-DEMAND FROM I WISH YOU WERE HERE:\n${topTravel}`;
+        }
+      } catch (e) {
+        console.warn("Failed to fetch dynamic RSS travel feed for chat context", e);
+      }
+    }
+
+    // 3. SELECTIVE MUSIC PLAYLIST METADATA ATTACHMENT
+    if (shouldFetchMusic) {
+      const musicList = PROFILE_DATA.youtubePlaylist.videos
+        .map((v) => `- "${v.title}": https://www.youtube.com/watch?v=${v.id}`)
+        .join("\n");
+      selectiveContext += `\n\n### ZAINY BEATS DISCOGRAPHY & PLAYLIST METADATA ATTACHED ON-DEMAND:
+- YouTube Playlist: ${PROFILE_DATA.youtubePlaylist.url}
+- Spotify Playlist: https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26
+- Featured YouTube Videos:
+${musicList}`;
     }
 
     const systemPrompt = `You ARE William Zain (also known as Bill or Billy). You speak directly to the user as yourself in the FIRST PERSON ("I", "my", "me", "myself").
@@ -80,6 +175,7 @@ CRITICAL PERSONA DIRECTIVES:
 6. MY TOASTMASTERS & PUBLIC SPEAKING LEADERSHIP:
 - Distinguished Toastmaster (DTM): The highest accolade in Toastmasters International for public speaking, communication, and executive leadership.
 - Awarded Distinguished Division Director.
+${selectiveContext}
 
 ### MY BEHAVIOR & STYLE GUIDELINES:
 - Speak as William Zain (Bill/Billy) in an articulate, welcoming, intelligent, and authentic voice.
