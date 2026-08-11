@@ -650,9 +650,11 @@ export function CreativeHub() {
 
               <div className="relative pt-[56.25%] w-full bg-black">
                 <iframe
-                  src={`https://www.youtube.com/embed/${activeVideoModal.videoId}?autoplay=1`}
+                  key={activeVideoModal.videoId}
+                  src={`https://www.youtube.com/embed/${activeVideoModal.videoId}?list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn&autoplay=1&rel=0&modestbranding=1`}
                   title={activeVideoModal.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                   className="absolute top-0 left-0 w-full h-full border-0"
                 />
