@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     // Trigger keyword lists
     const blogTriggers = ["blog", "articles", "insights", "hacks", "tips"];
     const travelTriggers = ["travel", "trips", "stories", "places", "adventures", "must see", "tours"];
-    const musicTriggers = ["music", "beats", "tracks", "songs", "youtube", "spotify", "playlist", "zainy"];
+    const musicTriggers = ["music", "beats", "tracks", "songs", "youtube", "spotify", "playlist", "zainy", "video", "videos", "vevo", "artist", "popular"];
 
     const containsTrigger = (text: string, triggers: string[]) => {
       return triggers.some((trig) => {
@@ -119,9 +119,11 @@ export async function POST(req: Request) {
       const musicList = PROFILE_DATA.youtubePlaylist.videos
         .map((v) => `- "${v.title}": https://www.youtube.com/watch?v=${v.id}`)
         .join("\n");
-      selectiveContext += `\n\n### ZAINY BEATS DISCOGRAPHY & PLAYLIST METADATA ATTACHED ON-DEMAND:
+      selectiveContext += `\n\n### ZAINY BEATS / BILLY ZAIN MUSIC & VIDEO LINKS ATTACHED ON-DEMAND:
+- Billy Zain's Latest Music Videos (YouTube VEVO): https://www.youtube.com/@BillyZainVEVO-sz7zh/videos (Use this exact link when asked about my latest music videos!)
+- Billy Zain's Spotify Artist Page (Latest & Most Popular Tracks): https://open.spotify.com/artist/4Ee9brJj365XxmzTtgz3cA (Use this exact link when asked about my latest or most popular tracks on Spotify!)
 - YouTube Playlist: ${PROFILE_DATA.youtubePlaylist.url}
-- Spotify Playlist: https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26
+- Spotify Curated Playlist: https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26
 - Featured YouTube Videos:
 ${musicList}`;
     }
@@ -161,11 +163,13 @@ CRITICAL PERSONA DIRECTIVES:
   - Amazon URL: ${PROFILE_DATA.books[1].amazonUrl}
   - Overview: I authored this guide to help digital creators and entrepreneurs build personal/corporate brands using AI tools for images, videos, music, and brand assets.
 
-4. MY DIGITAL MUSIC PRODUCTION (ZAINY BEATS):
-- My Music Studio: Zainy Beats
+4. MY DIGITAL MUSIC PRODUCTION (ZAINY BEATS / BILLY ZAIN):
+- My Music Studio: Zainy Beats (releasing as Billy Zain)
 - Style & Sound: Electronic beats, synthwave, ambient soundscapes, lofi, and atmospheric compositions created with Ableton Live and digital synthesizers.
+- My Latest Music Videos (YouTube VEVO): https://www.youtube.com/@BillyZainVEVO-sz7zh/videos (Provide this link when asked about my latest music videos!)
+- My Spotify Artist Profile (Latest & Most Popular Tracks): https://open.spotify.com/artist/4Ee9brJj365XxmzTtgz3cA (Provide this link when asked about my latest or most popular tracks on Spotify!)
 - YouTube Playlist: ${PROFILE_DATA.youtubePlaylist.url} (Features my original tracks like "A Gathering Storm", "Ghost in the Room", "Moscow Lights", "Steel Canyon Ghosts").
-- Spotify Playlist: https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26
+- Curated Spotify Playlist: https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26
 
 5. MY TRAVEL PLATFORM & STORYTELLING:
 - My Travel Website: "I Wish You Were Here" (https://i-wish-you-were-here.com/)

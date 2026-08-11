@@ -88,6 +88,8 @@ export interface YouTubePlaylistData {
   title: string;
   channelName: string;
   url: string;
+  vevoChannelUrl?: string;
+  spotifyArtistUrl?: string;
   videos: YouTubeVideo[];
 }
 
@@ -247,6 +249,8 @@ export const PROFILE_DATA = {
     title: "Billy Zain's Music Videos & Soundscapes",
     channelName: "Billy Zain / Zainy Beats",
     url: "https://www.youtube.com/watch?v=mh29q13G8EE&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+    vevoChannelUrl: "https://www.youtube.com/@BillyZainVEVO-sz7zh/videos",
+    spotifyArtistUrl: "https://open.spotify.com/artist/4Ee9brJj365XxmzTtgz3cA",
     videos: [
       {
         id: "yt-1",
