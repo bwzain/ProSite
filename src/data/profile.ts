@@ -248,49 +248,69 @@ export const PROFILE_DATA = {
   youtubePlaylist: {
     title: "Billy Zain's Music Videos & Soundscapes",
     channelName: "Billy Zain / Zainy Beats",
-    url: "https://www.youtube.com/watch?v=mh29q13G8EE&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+    url: "https://www.youtube.com/watch?v=1DERu1bd8Qs&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn&index=1",
     vevoChannelUrl: "https://www.youtube.com/@BillyZainVEVO-sz7zh/videos",
     spotifyArtistUrl: "https://open.spotify.com/artist/4Ee9brJj365XxmzTtgz3cA",
     videos: [
       {
         id: "yt-1",
+        videoId: "1DERu1bd8Qs",
+        title: "Electric Dreams (Official Music Video)",
+        description: "Official music video from Billy Zain's playlist featuring retro-futuristic synthwave textures and pulsing beats.",
+        duration: "3:45",
+        genre: "Synthwave / Electronic",
+        url: "https://www.youtube.com/watch?v=1DERu1bd8Qs&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+        thumbnail: "https://img.youtube.com/vi/1DERu1bd8Qs/hqdefault.jpg"
+      },
+      {
+        id: "yt-2",
         videoId: "mh29q13G8EE",
-        title: "A Gathering Storm (Official Video)",
-        description: "Cinematic/classical instrumental exploring emotional extremes through storm soundscapes and visuals.",
+        title: "Roadtrip up the space elevator",
+        description: "Cinematic instrumental exploring atmospheric soundscapes and cosmic themes.",
         duration: "4:12",
-        genre: "Cinematic / Instrumental",
+        genre: "Ambient / Cinematic",
         url: "https://www.youtube.com/watch?v=mh29q13G8EE&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
         thumbnail: "https://img.youtube.com/vi/mh29q13G8EE/hqdefault.jpg"
       },
       {
-        id: "yt-2",
-        videoId: "VfpsFYI4ou0",
-        title: "Ghost in the Room (Official Music Video)",
-        description: "Haunting alt-pop/alt-rock fusion where memory becomes a phantom and grief wears perfume.",
-        duration: "3:12",
-        genre: "Alt-Pop / Alt-Rock",
-        url: "https://www.youtube.com/watch?v=VfpsFYI4ou0",
-        thumbnail: "https://img.youtube.com/vi/VfpsFYI4ou0/hqdefault.jpg"
-      },
-      {
         id: "yt-3",
-        videoId: "GyoHKRAQQPg",
-        title: "Moscow Lights (Official Music Video)",
-        description: "Layered House and Techno textures with poetic lyricism and ambient sound design set in a snow-covered night.",
-        duration: "3:45",
-        genre: "Ambient Synthwave / Techno",
-        url: "https://www.youtube.com/watch?v=GyoHKRAQQPg",
-        thumbnail: "https://img.youtube.com/vi/GyoHKRAQQPg/hqdefault.jpg"
+        videoId: "k5Si6Poe82g",
+        title: "Sunrise over Algiers (Official Music Video)",
+        description: "Official music video blending Mediterranean rhythm, upbeat pop production, and rich atmospheric instrumentation.",
+        duration: "3:30",
+        genre: "World Pop / Rai Fusion",
+        url: "https://www.youtube.com/watch?v=k5Si6Poe82g&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+        thumbnail: "https://img.youtube.com/vi/k5Si6Poe82g/hqdefault.jpg"
       },
       {
         id: "yt-4",
-        videoId: "rxoyTfn6pso",
-        title: "Steel Canyon Ghosts (Official Audio)",
-        description: "Pulsing electronic arrangement and driving rhythms from the album Cultural Static.",
-        duration: "4:22",
-        genre: "Electronic / Synth",
-        url: "https://www.youtube.com/watch?v=rxoyTfn6pso",
-        thumbnail: "https://img.youtube.com/vi/rxoyTfn6pso/hqdefault.jpg"
+        videoId: "L1m69O-uZT8",
+        title: "Baila Conmigo",
+        description: "Energetic dance arrangement with vibrant percussion, melodic grooves, and driving electronic rhythms.",
+        duration: "3:15",
+        genre: "Latin Electronic / Dance",
+        url: "https://www.youtube.com/watch?v=L1m69O-uZT8&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+        thumbnail: "https://img.youtube.com/vi/L1m69O-uZT8/hqdefault.jpg"
+      },
+      {
+        id: "yt-5",
+        videoId: "9syLonSu52c",
+        title: "Fantôme de ma chambre (Official Music Video)",
+        description: "Haunting synth arrangement with poetic narrative and evocative sound design.",
+        duration: "3:20",
+        genre: "Alt-Pop / Electronic",
+        url: "https://www.youtube.com/watch?v=9syLonSu52c&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+        thumbnail: "https://img.youtube.com/vi/9syLonSu52c/hqdefault.jpg"
+      },
+      {
+        id: "yt-6",
+        videoId: "7DcL6gaAeqo",
+        title: "Alors le choc (Official Music Video)",
+        description: "Dynamic beat arrangement with striking analog synth lead lines and driving bass.",
+        duration: "3:40",
+        genre: "Electronic / Synthwave",
+        url: "https://www.youtube.com/watch?v=7DcL6gaAeqo&list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn",
+        thumbnail: "https://img.youtube.com/vi/7DcL6gaAeqo/hqdefault.jpg"
       }
     ]
   } as YouTubePlaylistData,

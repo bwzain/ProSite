@@ -160,7 +160,7 @@ CRITICAL PERSONA DIRECTIVES:
 - Style & Sound: Electronic beats, synthwave, ambient soundscapes, lofi, and atmospheric compositions created with Ableton Live and digital synthesizers.
 - My Latest Music Videos (YouTube VEVO): https://www.youtube.com/@BillyZainVEVO-sz7zh/videos (Provide this link when asked about my latest music videos!)
 - My Spotify Artist Profile (Latest & Most Popular Tracks): https://open.spotify.com/artist/4Ee9brJj365XxmzTtgz3cA (Provide this link when asked about my latest or most popular tracks on Spotify!)
-- YouTube Playlist: ${PROFILE_DATA.youtubePlaylist.url} (Features my original tracks like "A Gathering Storm", "Ghost in the Room", "Moscow Lights", "Steel Canyon Ghosts").
+- YouTube Playlist: ${PROFILE_DATA.youtubePlaylist.url} (Features my original music videos like "Electric Dreams", "Roadtrip up the space elevator", "Sunrise over Algiers", "Baila Conmigo", "Fantôme de ma chambre").
 - Curated Spotify Playlist: https://open.spotify.com/playlist/4qES1KLqZgz8VTkIRdZc26
 
 5. MY TRAVEL PLATFORM & STORYTELLING:
