@@ -4,14 +4,6 @@ import { getNotionBlogPosts } from "@/lib/notion";
 
 export const dynamic = "force-dynamic";
 
-// Primary model requested by user ("google/gemma-4-31b-it:free") with top free fallback models (max 3 for OpenRouter)
-const PRIMARY_MODEL = "google/gemma-4-31b-it:free";
-const FALLBACK_MODELS = [
-  "google/gemma-4-31b-it:free",
-  "google/gemma-4-26b-a4b-it:free",
-  "nvidia/nemotron-3-nano-30b-a3b:free",
-];
-
 // Helper to fetch RSS stories on demand for travel queries
 async function fetchRssFeedForChat() {
   try {
@@ -50,11 +42,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const apiKey = process.env.OPENROUTER_API_KEY || process.env.Openrouter_API_Key;
+    const geminiApiKey = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
 
-    if (!apiKey) {
+    if (!geminiApiKey) {
       return NextResponse.json(
-        { error: "OpenRouter API key is missing from environment variables." },
+        { error: "GEMINI_API_KEY is missing from environment variables." },
         { status: 500 }
       );
     }
@@ -189,75 +181,63 @@ ${selectiveContext}
 - Keep formatting clean with bullet points and short paragraphs.
 - If asked about something outside my background, politely pivot back to my experience in enterprise automation, AI literature, music, or travel.`;
 
-    const openRouterMessages = [
-      { role: "system", content: systemPrompt },
-      ...messages.map((m: { role: string; content: string }) => ({
-        role: m.role === "user" ? "user" : "assistant",
-        content: m.content,
-      })),
-    ];
+    // Format chat history for Google Gemini (roles: 'user' and 'model')
+    const geminiContents = messages.map((m: { role: string; content: string }) => ({
+      role: m.role === "user" ? "user" : "model",
+      parts: [{ text: m.content }],
+    }));
 
-    const openRouterRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "HTTP-Referer": "http://localhost:3000",
-        "X-Title": "William Zain Digital Twin",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: PRIMARY_MODEL,
-        models: FALLBACK_MODELS,
-        route: "fallback",
-        messages: openRouterMessages,
-        temperature: 0.7,
-        max_tokens: 1000,
-      }),
-    });
+    // List of Gemini models to try in sequence for high availability
+    const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
 
-    if (!openRouterRes.ok) {
-      const errBody = await openRouterRes.text();
-      console.error("OpenRouter Error:", errBody);
+    let replyText = "";
+    let modelUsed = "";
 
-      // Single retry if rate limited
-      if (openRouterRes.status === 429) {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        const retryRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${apiKey}`,
-            "HTTP-Referer": "http://localhost:3000",
-            "X-Title": "William Zain Digital Twin",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: PRIMARY_MODEL,
-            models: FALLBACK_MODELS,
-            route: "fallback",
-            messages: openRouterMessages,
-            temperature: 0.7,
-            max_tokens: 1000,
-          }),
-        });
-
-        if (retryRes.ok) {
-          const retryData = await retryRes.json();
-          const reply = retryData?.choices?.[0]?.message?.content;
-          if (reply) {
-            return NextResponse.json({ reply, modelUsed: retryData?.model || PRIMARY_MODEL });
+    for (const model of modelsToTry) {
+      try {
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiApiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: systemPrompt }],
+              },
+              contents: geminiContents,
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1000,
+              },
+            }),
           }
-        }
-      }
+        );
 
+        if (geminiRes.ok) {
+          const data = await geminiRes.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            replyText = text;
+            modelUsed = model;
+            break;
+          }
+        } else {
+          const errText = await geminiRes.text();
+          console.warn(`Gemini model ${model} returned HTTP ${geminiRes.status}:`, errText);
+        }
+      } catch (e) {
+        console.warn(`Error connecting to Gemini model ${model}:`, e);
+      }
+    }
+
+    if (!replyText) {
       return NextResponse.json(
         { error: "The Digital Twin service is temporarily busy. Please retry your question in a few moments." },
-        { status: openRouterRes.status }
+        { status: 503 }
       );
     }
 
-    const data = await openRouterRes.json();
-    const replyRaw = data?.choices?.[0]?.message?.content || "Hello! I am ready to answer any questions about William Zain's career, AI books, music, and travel.";
-    const reply = replyRaw
+    const reply = replyText
       .replace(/\uFFFD/g, "'")
       .replace(/â€™/g, "'")
       .replace(/â€"/g, "—")
@@ -266,7 +246,7 @@ ${selectiveContext}
 
     return NextResponse.json({
       reply,
-      modelUsed: data?.model || PRIMARY_MODEL,
+      modelUsed,
     });
   } catch (err: any) {
     console.error("Digital Twin Chat Server Error:", err);
