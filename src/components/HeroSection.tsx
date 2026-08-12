@@ -5,7 +5,7 @@ import { PROFILE_DATA } from "@/data/profile";
 
 export function HeroSection() {
   return (
-    <section className="relative pt-28 sm:pt-32 pb-16 sm:pb-20 overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <section className="relative pt-28 sm:pt-32 pb-6 sm:pb-8 overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Subtle Background Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] bg-gradient-to-tr from-sky-400/15 via-indigo-500/15 to-purple-500/15 rounded-full blur-[140px] pointer-events-none" />
 
@@ -138,7 +138,7 @@ export function HeroSection() {
         </div>
 
         {/* High Contrast Stat Bar */}
-        <div className="w-full pt-12 sm:pt-14">
+        <div className="w-full pt-8 sm:pt-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl">
             {PROFILE_DATA.stats.map((stat, idx) => (
               <div key={idx} className="flex flex-col items-center justify-center p-3 text-center border-r last:border-r-0 border-slate-200 dark:border-slate-800">

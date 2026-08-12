@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Allow phone / LAN testing against the machine's local IP in `next dev`
+  allowedDevOrigins: ["192.168.12.140", "localhost", "127.0.0.1"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

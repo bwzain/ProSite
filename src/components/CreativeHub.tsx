@@ -3,15 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Headphones, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, Play, X, ChevronDown, Rss } from "lucide-react";
-import { PROFILE_DATA, YouTubeVideo, RssStory } from "@/data/profile";
+import { Headphones, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, Play, ChevronDown, Rss } from "lucide-react";
+import { PROFILE_DATA, RssStory } from "@/data/profile";
 
 export function CreativeHub() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"beats" | "book" | "travel">("beats");
   const [expandedBookIds, setExpandedBookIds] = useState<Record<string, boolean>>({});
-  const [activeVideoModal, setActiveVideoModal] = useState<YouTubeVideo | null>(null);
   const [loadSpotifyPlayer, setLoadSpotifyPlayer] = useState(false);
   const spotifyRef = useRef<HTMLDivElement>(null);
 
@@ -192,10 +190,12 @@ export function CreativeHub() {
                     key={video.id}
                     className="group rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-500 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
                   >
-                    {/* Thumbnail with Play Overlay */}
-                    <div
-                      onClick={() => setActiveVideoModal(video)}
-                      className="relative h-44 w-full cursor-pointer overflow-hidden bg-slate-950 group"
+                    {/* Thumbnail with Play Overlay — opens YouTube (embeds blocked for these VEVO tracks) */}
+                    <a
+                      href={video.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative h-44 w-full cursor-pointer overflow-hidden bg-slate-950 group block"
                     >
                       <Image
                         src={video.thumbnail}
@@ -220,7 +220,7 @@ export function CreativeHub() {
                       <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-200 border border-purple-500/40 text-[10px] font-mono font-bold z-10">
                         {video.genre}
                       </span>
-                    </div>
+                    </a>
 
                     {/* Content */}
                     <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
@@ -234,13 +234,15 @@ export function CreativeHub() {
                       </div>
 
                       <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800">
-                        <button
-                          onClick={() => setActiveVideoModal(video)}
+                        <a
+                          href={video.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
                         >
                           <Play className="w-3.5 h-3.5" />
-                          <span>Watch Video</span>
-                        </button>
+                          <span>Watch on YouTube</span>
+                        </a>
 
                         <a
                           href={video.url}
@@ -624,60 +626,6 @@ export function CreativeHub() {
         )}
 
       </div>
-
-      {/* Embedded YouTube Video Modal */}
-      <AnimatePresence>
-        {activeVideoModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-4xl rounded-3xl bg-slate-900 border border-slate-800 overflow-hidden shadow-2xl"
-            >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950">
-                <div className="flex items-center gap-2">
-                  <Youtube className="w-5 h-5 text-red-500" />
-                  <span className="text-sm font-bold text-white">{activeVideoModal.title}</span>
-                </div>
-                <button
-                  onClick={() => setActiveVideoModal(null)}
-                  className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="relative pt-[56.25%] w-full bg-black">
-                <iframe
-                  key={activeVideoModal.videoId}
-                  src={`https://www.youtube.com/embed/${activeVideoModal.videoId}?list=PLPxVaKAOkZW6Xx_45jXFQSN1qa8BqPxHn&autoplay=1&rel=0&modestbranding=1`}
-                  title={activeVideoModal.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="absolute top-0 left-0 w-full h-full border-0"
-                />
-              </div>
-
-              <div className="p-6 bg-slate-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs text-slate-300 leading-relaxed">{activeVideoModal.description}</p>
-                </div>
-                <a
-                  href={activeVideoModal.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shrink-0 shadow-md"
-                >
-                  <span>Open on YouTube</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

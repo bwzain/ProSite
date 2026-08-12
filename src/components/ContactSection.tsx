@@ -81,6 +81,17 @@ export function ContactSection() {
               <Mail className="w-4 h-4" />
               <span>Send Direct Email</span>
             </button>
+
+            <a
+              href={PROFILE_DATA.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-700 dark:text-slate-300 hover:bg-blue-600 hover:text-white border border-transparent hover:border-blue-500"
+            >
+              <Linkedin className="w-4 h-4" />
+              <span>LinkedIn Profile</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+            </a>
           </div>
         </div>
 
