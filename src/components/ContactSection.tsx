@@ -28,12 +28,14 @@ export function ContactSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
+
+    const subject = encodeURIComponent(`Website inquiry from ${formData.name.trim()}`);
+    const body = encodeURIComponent(
+      `From: ${formData.name.trim()} <${formData.email.trim()}>\n\n${formData.message.trim()}`
+    );
+    window.location.href = `mailto:${PROFILE_DATA.email}?subject=${subject}&body=${body}`;
     setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: "", email: "", message: "" });
-    }, 4000);
   };
 
   return (
@@ -171,7 +173,7 @@ export function ContactSection() {
                 <span>Send Direct Message</span>
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300 mb-6 font-medium">
-                Submit your message below and William Zain will reply directly to your email.
+                This opens your email app with the message filled in. Send it from there so William receives it at {PROFILE_DATA.email}.
               </p>
 
               {submitted ? (
@@ -183,10 +185,17 @@ export function ContactSection() {
                   <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-md">
                     <Check className="w-6 h-6" />
                   </div>
-                  <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100">Message Sent!</h4>
+                  <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100">Email app opened</h4>
                   <p className="text-xs text-emerald-800 dark:text-emerald-200 font-medium">
-                    Thank you, {formData.name}. William Zain will review your inquiry shortly.
+                    If nothing opened, copy {PROFILE_DATA.email} and send your note manually.
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="text-xs font-bold text-emerald-800 dark:text-emerald-200 underline"
+                  >
+                    Edit message
+                  </button>
                 </motion.div>
               ) : mounted ? (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -235,7 +244,7 @@ export function ContactSection() {
                     className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md transition-all"
                   >
                     <Send className="w-4 h-4" />
-                    <span>Send Message</span>
+                    <span>Open Email App</span>
                   </button>
                 </form>
               ) : (

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { BookOpen, ExternalLink, Calendar, Tag, Search, X } from "lucide-react";
 import { BlogPost } from "@/lib/notion";
+import { toHttpsUrl } from "@/lib/safeUrl";
 
 export function BlogSection() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -17,7 +18,7 @@ export function BlogSection() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/blogs?t=${Date.now()}`);
+      const res = await fetch("/api/blogs");
       const data = await res.json();
       if (data.success && Array.isArray(data.posts)) {
         setBlogs(data.posts);
@@ -160,11 +161,11 @@ export function BlogSection() {
                     onClick={() => setSelectedPost(post)}
                     className="relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-950 cursor-pointer"
                   >
-                    {post.image ? (
+                    {toHttpsUrl(post.image) ? (
                       // Notion file URLs expire and use hosts not listed in next.config.
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={post.image}
+                        src={toHttpsUrl(post.image)}
                         alt={post.title}
                         className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                       />
@@ -204,9 +205,9 @@ export function BlogSection() {
                     <span>Read Article</span>
                   </button>
 
-                  {post.sourceUrl ? (
+                  {toHttpsUrl(post.sourceUrl) ? (
                     <a
-                      href={post.sourceUrl}
+                      href={toHttpsUrl(post.sourceUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition-all shadow-sm"
@@ -261,10 +262,10 @@ export function BlogSection() {
                     {post.category}
                   </span>
                   <div className="relative h-[4.75rem] w-[4.75rem] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900 sm:h-[5.5rem] sm:w-[5.5rem]">
-                    {post.image ? (
+                    {toHttpsUrl(post.image) ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={post.image}
+                        src={toHttpsUrl(post.image)}
                         alt=""
                         className="h-full w-full object-cover"
                       />
@@ -387,10 +388,10 @@ export function BlogSection() {
               
               {/* Image Column */}
               <div className="md:col-span-5 relative aspect-square sm:aspect-[4/3] md:aspect-[3/4] w-full rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-950 shadow-lg border border-slate-200 dark:border-slate-800 shrink-0">
-                {selectedPost.image ? (
+                {toHttpsUrl(selectedPost.image) ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={selectedPost.image}
+                    src={toHttpsUrl(selectedPost.image)}
                     alt={selectedPost.title}
                     className="h-full w-full object-cover"
                   />
@@ -416,9 +417,9 @@ export function BlogSection() {
 
                 {/* Modal Footer CTAs */}
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
-                  {selectedPost.sourceUrl ? (
+                  {toHttpsUrl(selectedPost.sourceUrl) ? (
                     <a
-                      href={selectedPost.sourceUrl}
+                      href={toHttpsUrl(selectedPost.sourceUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition-all"

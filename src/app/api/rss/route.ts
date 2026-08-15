@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { checkPublicGetRateLimit, getClientIp } from "@/lib/chatRateLimit";
+import { toHttpsUrl } from "@/lib/safeUrl";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export interface RssStory {
   title: string;
@@ -9,6 +11,10 @@ export interface RssStory {
   teaser: string;
   pubDate: string;
 }
+
+const DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600&auto=format&fit=crop";
+const DEFAULT_LINK = "https://i-wish-you-were-here.com/";
 
 function unescapeHtml(str: string): string {
   let s = str;
@@ -28,13 +34,21 @@ function unescapeHtml(str: string): string {
   return s;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const rate = await checkPublicGetRateLimit(getClientIp(req), "rss");
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again shortly." },
+        { status: 429, headers: { "Retry-After": String(rate.retryAfterSec) } }
+      );
+    }
+
     const res = await fetch("https://i-wish-you-were-here.com/rss.xml", {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
       },
-      cache: "no-store",
+      next: { revalidate: 300 },
     });
 
     if (!res.ok) {
@@ -53,7 +67,7 @@ export async function GET() {
 
       // Extract Link
       const linkMatch = itemXml.match(/<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i);
-      let link = linkMatch ? linkMatch[1].trim() : "https://i-wish-you-were-here.com/";
+      let link = toHttpsUrl(linkMatch ? linkMatch[1].trim() : "", DEFAULT_LINK);
 
       // Extract Description
       const descMatch = itemXml.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i);
@@ -69,9 +83,8 @@ export async function GET() {
         if (image.startsWith("/")) {
           image = `https://i-wish-you-were-here.com${image}`;
         }
-      } else {
-        image = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600&auto=format&fit=crop";
       }
+      image = toHttpsUrl(image, DEFAULT_IMAGE);
 
       // Extract story body if present to skip header metadata
       let bodyHtml = decodedDesc;
@@ -112,10 +125,13 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({ success: true, stories, fetchedAt: new Date().toISOString() });
-  } catch (error: any) {
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to parse feed" },
+      { success: true, stories, fetchedAt: new Date().toISOString() },
+      { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" } }
+    );
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "Unable to load travel stories right now." },
       { status: 500 }
     );
   }

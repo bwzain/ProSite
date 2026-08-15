@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Headphones, BookOpen, Compass, ArrowRight, Play, Sparkles, Rss, Music } from "lucide-react";
 import { PROFILE_DATA, RssStory } from "@/data/profile";
+import { toHttpsUrl } from "@/lib/safeUrl";
 
 export function CreativeHubSpotlight() {
   const [topRssStory, setTopRssStory] = useState<RssStory | null>(null);
@@ -13,7 +14,7 @@ export function CreativeHubSpotlight() {
     // Fetch latest RSS story for Travel Spotlight tile
     async function loadLatestStory() {
       try {
-        const res = await fetch(`/api/rss?t=${Date.now()}`);
+        const res = await fetch("/api/rss");
         const data = await res.json();
         if (data.success && Array.isArray(data.stories) && data.stories.length > 0) {
           setTopRssStory(data.stories[0]);
@@ -167,7 +168,7 @@ export function CreativeHubSpotlight() {
               {/* RSS Story Preview */}
               <Link href="/creations?tab=travel" className="block relative h-40 w-full rounded-2xl overflow-hidden bg-slate-900 shadow-md group-hover:scale-[1.02] transition-transform">
                 <Image
-                  src={topRssStory?.image || defaultTravelImage}
+                  src={toHttpsUrl(topRssStory?.image, defaultTravelImage) || defaultTravelImage}
                   alt={topRssStory?.title || "I Wish You Were Here Travel"}
                   fill
                   unoptimized={!!topRssStory?.image}

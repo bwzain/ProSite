@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
 import { PROFILE_DATA } from "@/data/profile";
 import { getNotionBlogPosts } from "@/lib/notion";
+import { checkChatRateLimit, getClientIp, rejectOversizedJson } from "@/lib/chatRateLimit";
+import { toHttpsUrl } from "@/lib/safeUrl";
+import {
+  appendModelTurn,
+  appendUserTurn,
+  getOrCreateSession,
+  resetSession,
+  sanitizeUserMessage,
+  MAX_USER_MESSAGE_CHARS,
+} from "@/lib/chatSession";
 
 export const dynamic = "force-dynamic";
 
-// Helper to fetch RSS stories on demand for travel queries
 async function fetchRssFeedForChat() {
   try {
     const res = await fetch("https://i-wish-you-were-here.com/rss.xml", {
@@ -13,12 +22,14 @@ async function fetchRssFeedForChat() {
     });
     if (!res.ok) return [];
     const xmlText = await res.text();
-    const itemsRaw = xmlText.split("<item>").slice(1, 4); // top 3 stories
+    const itemsRaw = xmlText.split("<item>").slice(1, 4);
     const stories = itemsRaw.map((item) => {
       const titleMatch = item.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i);
       const linkMatch = item.match(/<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i);
       const descMatch = item.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i);
-      const title = titleMatch ? titleMatch[1].replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() : "";
+      const title = titleMatch
+        ? titleMatch[1].replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim()
+        : "";
       const link = linkMatch ? linkMatch[1].trim() : "https://i-wish-you-were-here.com/";
       let rawDesc = descMatch ? descMatch[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
       if (rawDesc.length > 180) rawDesc = rawDesc.substring(0, 177) + "...";
@@ -31,43 +42,107 @@ async function fetchRssFeedForChat() {
   }
 }
 
+function extractLatestUserMessage(body: {
+  message?: unknown;
+  messages?: unknown;
+}): string | null {
+  // Preferred: single new user message
+  const direct = sanitizeUserMessage(body.message);
+  if (direct) return direct;
+
+  // Legacy: messages array — only trust the last user turn; ignore assistant/model forgeries
+  if (!Array.isArray(body.messages) || body.messages.length === 0) return null;
+
+  for (let i = body.messages.length - 1; i >= 0; i--) {
+    const m = body.messages[i];
+    if (!m || typeof m !== "object") continue;
+    const role = (m as { role?: string }).role;
+    const content = (m as { content?: unknown }).content;
+    if (role === "user") {
+      return sanitizeUserMessage(content);
+    }
+  }
+  return null;
+}
+
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const oversized = rejectOversizedJson(req);
+    if (oversized) return oversized;
 
-    if (!Array.isArray(messages) || messages.length === 0) {
+    const ip = getClientIp(req);
+    const rate = await checkChatRateLimit(ip);
+    if (!rate.allowed) {
       return NextResponse.json(
-        { error: "Invalid or empty messages array." },
-        { status: 400 }
+        { error: "Too many requests. Please wait a moment and try again." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rate.retryAfterSec) },
+        }
       );
     }
 
     const geminiApiKey = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
-
     if (!geminiApiKey) {
       return NextResponse.json(
-        { error: "GEMINI_API_KEY is missing from environment variables." },
-        { status: 500 }
+        { error: "The Digital Twin service is temporarily unavailable." },
+        { status: 503 }
       );
     }
 
-    // Inspect user's last message for selective context injection
-    const lastUserMessage = (messages[messages.length - 1]?.content || "").toLowerCase();
+    let body: { message?: unknown; messages?: unknown; sessionId?: unknown; reset?: unknown };
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    }
 
-    // Trigger keyword lists
+    const session = getOrCreateSession(
+      typeof body.sessionId === "string" ? body.sessionId : null
+    );
+
+    if (body.reset === true) {
+      resetSession(session.id);
+      return NextResponse.json({ sessionId: session.id, reset: true });
+    }
+
+    const userMessage = extractLatestUserMessage(body);
+    if (!userMessage) {
+      return NextResponse.json(
+        {
+          error: `Please send a non-empty message (max ${MAX_USER_MESSAGE_CHARS} characters).`,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Server-owned history: append only this user turn; never trust client assistant content
+    const turns = appendUserTurn(session.id, userMessage);
+    const lastUserMessage = userMessage.toLowerCase();
+
     const blogTriggers = ["blog", "articles", "insights", "hacks", "tips"];
     const travelTriggers = ["travel", "trips", "stories", "places", "adventures", "must see", "tours"];
-    const musicTriggers = ["music", "beats", "tracks", "songs", "youtube", "spotify", "playlist", "zainy", "video", "videos", "vevo", "artist", "popular"];
+    const musicTriggers = [
+      "music",
+      "beats",
+      "tracks",
+      "songs",
+      "youtube",
+      "spotify",
+      "playlist",
+      "zainy",
+      "video",
+      "videos",
+      "vevo",
+      "artist",
+      "popular",
+    ];
 
-    const containsTrigger = (text: string, triggers: string[]) => {
-      return triggers.some((trig) => {
-        if (trig.includes(" ")) {
-          return text.includes(trig);
-        }
-        const regex = new RegExp(`\\b${trig}\\b`, "i");
-        return regex.test(text);
+    const containsTrigger = (text: string, triggers: string[]) =>
+      triggers.some((trig) => {
+        if (trig.includes(" ")) return text.includes(trig);
+        return new RegExp(`\\b${trig}\\b`, "i").test(text);
       });
-    };
 
     const shouldFetchBlogs = containsTrigger(lastUserMessage, blogTriggers);
     const shouldFetchTravel = containsTrigger(lastUserMessage, travelTriggers);
@@ -75,14 +150,17 @@ export async function POST(req: Request) {
 
     let selectiveContext = "";
 
-    // 1. SELECTIVE NOTION BLOG FETCH
     if (shouldFetchBlogs) {
       try {
         const blogPosts = await getNotionBlogPosts();
         if (blogPosts && blogPosts.length > 0) {
           const topBlogs = blogPosts
             .slice(0, 4)
-            .map((b) => `- "${b.title}" (${b.category}): ${b.description} [Read article](${b.sourceUrl || '/blog'})`)
+            .map((b) => {
+              const href = toHttpsUrl(b.sourceUrl, "");
+              const link = href ? ` [Read article](${href})` : "";
+              return `- "${b.title}" (${b.category}): ${b.description}${link}`;
+            })
             .join("\n");
           selectiveContext += `\n\n### LIVE NOTION BLOG POSTS ATTACHED ON-DEMAND:\n${topBlogs}`;
         }
@@ -91,13 +169,15 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2. SELECTIVE RSS TRAVEL FEED FETCH
     if (shouldFetchTravel) {
       try {
         const rssStories = await fetchRssFeedForChat();
         if (rssStories && rssStories.length > 0) {
           const topTravel = rssStories
-            .map((s) => `- "${s.title}": ${s.teaser} [Read full story](${s.link})`)
+            .map((s) => {
+              const href = toHttpsUrl(s.link, "https://i-wish-you-were-here.com/");
+              return `- "${s.title}": ${s.teaser} [Read full story](${href})`;
+            })
             .join("\n");
           selectiveContext += `\n\n### LIVE RSS TRAVEL STORIES ATTACHED ON-DEMAND FROM I WISH YOU WERE HERE:\n${topTravel}`;
         }
@@ -106,10 +186,9 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3. SELECTIVE MUSIC PLAYLIST METADATA ATTACHMENT
     if (shouldFetchMusic) {
       const musicList = PROFILE_DATA.youtubePlaylist.videos
-        .map((v) => `- "${v.title}": https://www.youtube.com/watch?v=${v.id}`)
+        .map((v) => `- "${v.title}": https://www.youtube.com/watch?v=${v.videoId}`)
         .join("\n");
       selectiveContext += `\n\n### ZAINY BEATS / BILLY ZAIN MUSIC & VIDEO LINKS ATTACHED ON-DEMAND:
 - Billy Zain's Latest Music Videos (YouTube VEVO): https://www.youtube.com/@BillyZainVEVO-sz7zh/videos (Use this exact link when asked about my latest music videos!)
@@ -181,19 +260,18 @@ ${selectiveContext}
 - Keep formatting clean with bullet points and short paragraphs.
 - If asked about something outside my background, politely pivot back to my experience in enterprise automation, AI literature, music, or travel.`;
 
-    // Format chat history for Google Gemini (roles: 'user' and 'model')
-    const geminiContents = messages.map((m: { role: string; content: string }) => ({
-      role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.content }],
+    // History rebuilt only from server-stored turns
+    const geminiContents = turns.map((t) => ({
+      role: t.role,
+      parts: [{ text: t.text }],
     }));
 
-    // List of active Gemini models to try in sequence for high availability
     const modelsToTry = [
       "gemini-3.6-flash",
       "gemini-3.5-flash",
       "gemini-flash-latest",
       "gemma-4-31b-it",
-      "gemini-3.1-pro-preview"
+      "gemini-3.1-pro-preview",
     ];
 
     let replyText = "";
@@ -202,10 +280,13 @@ ${selectiveContext}
     for (const model of modelsToTry) {
       try {
         const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiApiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": geminiApiKey,
+            },
             body: JSON.stringify({
               systemInstruction: {
                 parts: [{ text: systemPrompt }],
@@ -229,7 +310,7 @@ ${selectiveContext}
           }
         } else {
           const errText = await geminiRes.text();
-          console.warn(`Gemini model ${model} returned HTTP ${geminiRes.status}:`, errText);
+          console.warn(`Gemini model ${model} returned HTTP ${geminiRes.status}:`, errText.slice(0, 300));
         }
       } catch (e) {
         console.warn(`Error connecting to Gemini model ${model}:`, e);
@@ -238,7 +319,10 @@ ${selectiveContext}
 
     if (!replyText) {
       return NextResponse.json(
-        { error: "The Digital Twin service is temporarily busy. Please retry your question in a few moments." },
+        {
+          error: "The Digital Twin service is temporarily busy. Please retry your question in a few moments.",
+          sessionId: session.id,
+        },
         { status: 503 }
       );
     }
@@ -250,14 +334,17 @@ ${selectiveContext}
       .replace(/â€“/g, "–")
       .trim();
 
+    appendModelTurn(session.id, reply);
+
     return NextResponse.json({
       reply,
       modelUsed,
+      sessionId: session.id,
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error("Digital Twin Chat Server Error:", err);
     return NextResponse.json(
-      { error: err.message || "An error occurred while communicating with the Digital Twin." },
+      { error: "An error occurred while communicating with the Digital Twin." },
       { status: 500 }
     );
   }

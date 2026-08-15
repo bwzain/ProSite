@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Headphones, BookOpen, ExternalLink, Compass, Sparkles, ChevronRight, Music, CheckCircle2, Youtube, Play, ChevronDown, Rss } from "lucide-react";
 import { PROFILE_DATA, RssStory } from "@/data/profile";
+import { toHttpsUrl } from "@/lib/safeUrl";
 
 export function CreativeHub() {
   const searchParams = useSearchParams();
@@ -51,12 +52,12 @@ export function CreativeHub() {
     setLoadingRss(true);
     setRssError(null);
     try {
-      const res = await fetch(`/api/rss?t=${Date.now()}`);
+      const res = await fetch("/api/rss");
       const data = await res.json();
       if (data.success && Array.isArray(data.stories)) {
         setRssStories(data.stories);
       } else {
-        setRssError(data.error || "Failed to load feed");
+        setRssError("Unable to load travel stories right now.");
       }
     } catch {
       setRssError("Network error loading travel feed");
@@ -518,24 +519,30 @@ export function CreativeHub() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {rssStories.slice(0, visibleCount).map((story, idx) => (
+                  {rssStories.slice(0, visibleCount).map((story, idx) => {
+                    const storyLink = toHttpsUrl(story.link);
+                    const storyImage = toHttpsUrl(story.image);
+                    if (!storyLink) return null;
+                    return (
                     <div
-                      key={story.link || idx}
+                      key={storyLink || idx}
                       className="group p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row items-start gap-4 sm:gap-6"
                     >
                       {/* Left: Image Thumbnail */}
                       <a
-                        href={story.link}
+                        href={storyLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="relative w-full sm:w-48 h-40 sm:h-32 rounded-xl overflow-hidden bg-slate-950 shrink-0 block group/img"
                       >
+                        {storyImage ? (
                         <img
-                          src={story.image}
+                          src={storyImage}
                           alt={story.title}
                           loading="lazy"
                           className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
                         />
+                        ) : null}
                         {story.pubDate && (
                           <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-slate-950/85 text-white text-[10px] font-mono font-bold">
                             {story.pubDate}
@@ -547,7 +554,7 @@ export function CreativeHub() {
                       <div className="space-y-2 flex-1 flex flex-col justify-between self-stretch">
                         <div className="space-y-1.5">
                           <a
-                            href={story.link}
+                            href={storyLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block"
@@ -564,7 +571,7 @@ export function CreativeHub() {
 
                         <div className="pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80">
                           <a
-                            href={story.link}
+                            href={storyLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
@@ -579,7 +586,8 @@ export function CreativeHub() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
 
                   {/* Bottom Action Button for Loading More Articles */}
                   <div className="flex justify-center pt-2">

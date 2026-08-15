@@ -26,6 +26,7 @@ export function DigitalTwinChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -39,12 +40,14 @@ export function DigitalTwinChat() {
   }, [messages, loading]);
 
   const handleSend = async (queryText?: string) => {
-    const messageToSend = queryText || input;
-    if (!messageToSend.trim() || loading) return;
+    const messageToSend = (queryText || input).trim();
+    if (!messageToSend || loading) return;
+
+    // Client-side cap aligned with server MAX_USER_MESSAGE_CHARS
+    const capped = messageToSend.slice(0, 2000);
 
     setError(null);
-    const newMessages: Message[] = [...messages, { role: "user", content: messageToSend }];
-    setMessages(newMessages);
+    setMessages((prev) => [...prev, { role: "user", content: capped }]);
     if (!queryText) setInput("");
     setLoading(true);
 
@@ -53,26 +56,32 @@ export function DigitalTwinChat() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
+          message: capped,
+          sessionId,
         }),
       });
 
       const data = await res.json();
+
+      if (data.sessionId && data.sessionId !== sessionId) {
+        setSessionId(data.sessionId);
+      }
 
       if (!res.ok || data.error) {
         throw new Error(data.error || "Failed to receive response from Digital Twin.");
       }
 
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Chat error:", err);
-      setError(err.message || "Something went wrong. Please try again.");
+      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     setMessages([
       {
         role: "assistant",
@@ -81,6 +90,19 @@ export function DigitalTwinChat() {
       },
     ]);
     setError(null);
+    setInput("");
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reset: true, sessionId }),
+      });
+      const data = await res.json();
+      if (data.sessionId) setSessionId(data.sessionId);
+    } catch {
+      setSessionId(null);
+    }
   };
 
   const cleanResponseText = (text: string): string => {
@@ -328,6 +350,7 @@ export function DigitalTwinChat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask William Zain's Digital Twin a question..."
           disabled={loading}
+          maxLength={2000}
           className="flex-1 px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-medium focus:outline-none focus:border-sky-500 disabled:opacity-50"
         />
 

@@ -1,3 +1,5 @@
+import { toHttpsUrl } from "@/lib/safeUrl";
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -70,14 +72,15 @@ function mapPageToBlogPost(page: NotionPage): BlogPost {
     descriptionProp?.type === "rich_text"
       ? richTextPlain(descriptionProp.rich_text)
       : "";
-  const sourceUrl =
+  const sourceUrlRaw =
     sourceProp?.type === "url" && sourceProp.url ? sourceProp.url : undefined;
+  const sourceUrl = sourceUrlRaw ? toHttpsUrl(sourceUrlRaw) || undefined : undefined;
 
   return {
     id: page.id,
     title: title || "Untitled Post",
     description,
-    image: featuredImageUrl(imageProp),
+    image: toHttpsUrl(featuredImageUrl(imageProp)),
     sourceUrl,
     category: category || "General",
     date,
@@ -107,7 +110,7 @@ async function queryPublishedPages(
         page_size: PAGE_SIZE,
         ...(startCursor ? { start_cursor: startCursor } : {}),
       }),
-      cache: "no-store",
+      next: { revalidate: 300 },
     },
   );
 
