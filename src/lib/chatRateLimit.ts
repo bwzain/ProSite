@@ -20,6 +20,7 @@ const DAY_MS = 86_400_000;
 export const CHAT_MINUTE_LIMIT = 10;
 export const CHAT_DAILY_LIMIT = 40;
 export const PUBLIC_GET_MINUTE_LIMIT = 30;
+export const CONTACT_MINUTE_LIMIT = 5;
 export const MAX_JSON_BODY_BYTES = 64 * 1024;
 
 function pruneExpired(now: number) {
@@ -136,6 +137,14 @@ export async function checkPublicGetRateLimit(ip: string, route: "blogs" | "rss"
   { allowed: true } | { allowed: false; retryAfterSec: number }
 > {
   const result = await consume(`get:${route}:${ip}`, PUBLIC_GET_MINUTE_LIMIT, MINUTE_MS);
+  if (!result.allowed) return { allowed: false, retryAfterSec: result.retryAfterSec };
+  return { allowed: true };
+}
+
+export async function checkContactRateLimit(ip: string): Promise<
+  { allowed: true } | { allowed: false; retryAfterSec: number }
+> {
+  const result = await consume(`contact:min:${ip}`, CONTACT_MINUTE_LIMIT, MINUTE_MS);
   if (!result.allowed) return { allowed: false, retryAfterSec: result.retryAfterSec };
   return { allowed: true };
 }

@@ -11,6 +11,8 @@ export function ContactSection() {
   const [activeMode, setActiveTabMode] = useState<"chat" | "email">("chat");
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
   useEffect(() => {
@@ -26,16 +28,38 @@ export function ContactSection() {
     setTimeout(() => setCopiedEmail(false), 2500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
+    if (sending) return;
 
-    const subject = encodeURIComponent(`Website inquiry from ${formData.name.trim()}`);
-    const body = encodeURIComponent(
-      `From: ${formData.name.trim()} <${formData.email.trim()}>\n\n${formData.message.trim()}`
-    );
-    window.location.href = `mailto:${PROFILE_DATA.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const message = formData.message.trim();
+    if (!name || !email || !message) return;
+
+    setSending(true);
+    setFormError(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      if (!res.ok) {
+        setFormError(
+          data?.error || "Unable to send your message right now. Please try again or email directly."
+        );
+        return;
+      }
+      setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setFormError("Unable to send your message right now. Please try again or email directly.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -173,7 +197,7 @@ export function ContactSection() {
                 <span>Send Direct Message</span>
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300 mb-6 font-medium">
-                This opens your email app with the message filled in. Send it from there so William receives it at {PROFILE_DATA.email}.
+                Send a message from this form and it will be delivered to {PROFILE_DATA.email}. You can also copy the email or reach out on LinkedIn.
               </p>
 
               {submitted ? (
@@ -185,16 +209,19 @@ export function ContactSection() {
                   <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-md">
                     <Check className="w-6 h-6" />
                   </div>
-                  <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100">Email app opened</h4>
+                  <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100">Message sent</h4>
                   <p className="text-xs text-emerald-800 dark:text-emerald-200 font-medium">
-                    If nothing opened, copy {PROFILE_DATA.email} and send your note manually.
+                    Thanks — William will follow up at the email you provided.
                   </p>
                   <button
                     type="button"
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormError(null);
+                    }}
                     className="text-xs font-bold text-emerald-800 dark:text-emerald-200 underline"
                   >
-                    Edit message
+                    Send another message
                   </button>
                 </motion.div>
               ) : mounted ? (
@@ -205,11 +232,13 @@ export function ContactSection() {
                       <input
                         type="text"
                         required
+                        maxLength={200}
                         autoComplete="name"
+                        disabled={sending}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Sarah Connor"
-                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-sky-500"
+                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-sky-500 disabled:opacity-60"
                       />
                     </div>
 
@@ -218,11 +247,13 @@ export function ContactSection() {
                       <input
                         type="email"
                         required
+                        maxLength={254}
                         autoComplete="email"
+                        disabled={sending}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="e.g. sarah@example.com"
-                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-sky-500"
+                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-sky-500 disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -232,19 +263,28 @@ export function ContactSection() {
                     <textarea
                       rows={4}
                       required
+                      maxLength={4000}
+                      disabled={sending}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Inquire about enterprise consulting, music production, or AI literature..."
-                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium focus:outline-none focus:border-sky-500 resize-none"
+                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium focus:outline-none focus:border-sky-500 resize-none disabled:opacity-60"
                     />
                   </div>
 
+                  {formError ? (
+                    <p className="text-xs font-medium text-red-700 dark:text-red-300" role="alert">
+                      {formError}
+                    </p>
+                  ) : null}
+
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md transition-all"
+                    disabled={sending}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-500 disabled:bg-sky-600/70 disabled:cursor-not-allowed text-white font-bold text-xs shadow-md transition-all"
                   >
                     <Send className="w-4 h-4" />
-                    <span>Open Email App</span>
+                    <span>{sending ? "Sending..." : "Send Message"}</span>
                   </button>
                 </form>
               ) : (

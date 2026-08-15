@@ -27,7 +27,7 @@ export function Navbar() {
     { name: "About Me", href: "/about", icon: Compass, desc: "Enterprise legacy & creative pivot" },
     { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, AI Books & Travel" },
     { name: "Blog", href: "/blog", icon: BookOpen, desc: "Notion-powered insights & AI guides" },
-    { name: "Websites", href: "/websites", icon: Globe, desc: "Digital ecosystem & live portals" },
+    { name: "Connections", href: "/websites", icon: Globe, desc: "Digital ecosystem & live portals" },
     { name: "Accomplishments", href: "/accomplishments", icon: Trophy, desc: "Toastmasters DTM & Certifications" },
     { name: "Contact", href: "/contact", icon: Mail, desc: "Direct inquiries & collaboration" },
   ];
