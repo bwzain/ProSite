@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { PROFILE_DATA } from "@/data/profile";
 import { checkContactRateLimit, getClientIp, rejectOversizedJson } from "@/lib/chatRateLimit";
 
@@ -9,23 +9,10 @@ const MAX_NAME_CHARS = 200;
 const MAX_EMAIL_CHARS = 254;
 const MAX_MESSAGE_CHARS = 4000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DEFAULT_FROM = "Website contact <beth.t@example.com>";
 
 function stripHeaderUnsafe(value: string): string {
   return value.replace(/[\r\n]/g, "").trim();
-}
-
-function smtpConfig() {
-  const host = process.env.SMTP_HOST?.trim();
-  const portRaw = process.env.SMTP_PORT?.trim();
-  const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASS;
-  const port = portRaw ? Number(portRaw) : NaN;
-
-  if (!host || !user || !pass || !Number.isFinite(port) || port <= 0) {
-    return null;
-  }
-
-  return { host, port, user, pass };
 }
 
 export async function POST(req: Request) {
@@ -42,9 +29,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const smtp = smtpConfig();
-    if (!smtp) {
-      console.error("Contact SMTP is not configured (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS).");
+    const apiKey = process.env.RESEND_API_KEY?.trim();
+    if (!apiKey) {
+      console.error("Contact email is not configured (RESEND_API_KEY).");
       return NextResponse.json(
         { error: "The contact form is temporarily unavailable. Please email or message on LinkedIn instead." },
         { status: 503 }
@@ -75,24 +62,24 @@ export async function POST(req: Request) {
     }
 
     const to = process.env.CONTACT_TO?.trim() || PROFILE_DATA.email;
+    const from = process.env.CONTACT_FROM?.trim() || DEFAULT_FROM;
+    const resend = new Resend(apiKey);
 
-    const transporter = nodemailer.createTransport({
-      host: smtp.host,
-      port: smtp.port,
-      secure: smtp.port === 465,
-      auth: {
-        user: smtp.user,
-        pass: smtp.pass,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"Website contact" <${smtp.user}>`,
+    const { error } = await resend.emails.send({
+      from,
       to,
       replyTo: `"${name}" <${email}>`,
       subject: `Website inquiry from ${name}`,
       text: `From: ${name} <${email}>\n\n${message}`,
     });
+
+    if (error) {
+      console.error("Contact form send failed:", error);
+      return NextResponse.json(
+        { error: "Unable to send your message right now. Please try again or email directly." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
