@@ -9,7 +9,7 @@ const MAX_NAME_CHARS = 200;
 const MAX_EMAIL_CHARS = 254;
 const MAX_MESSAGE_CHARS = 4000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const DEFAULT_FROM = "Website contact <beth.t@example.com>";
+const DEFAULT_FROM = "William Zain <onboarding@resend.dev>";
 
 function stripHeaderUnsafe(value: string): string {
   return value.replace(/[\r\n]/g, "").trim();

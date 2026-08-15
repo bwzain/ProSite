@@ -2,7 +2,8 @@ import Image from "next/image";
 import { Headphones, BookOpen, Cpu, Compass, CheckCircle2, Shield, Award } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
-export function AboutSection() {
+export function AboutSection({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" }) {
+  const TitleTag = headingLevel;
   const iconMap: Record<string, any> = {
     Headphones: Headphones,
     BookOpen: BookOpen,
@@ -20,9 +21,9 @@ export function AboutSection() {
             <Shield className="w-3.5 h-3.5" />
             <span>About William Zain</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <TitleTag className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Enterprise Titan Turned <span className="text-sky-600 dark:text-sky-400">Creative Pioneer</span>
-          </h2>
+          </TitleTag>
           <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl font-medium">
             30+ years of architecting complex enterprise systems, reframed through the lens of music production, AI literature, and creative storytelling.
           </p>

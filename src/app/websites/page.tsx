@@ -1,8 +1,9 @@
 import { WebsitesShowcase } from "@/components/WebsitesShowcase";
 
 export const metadata = {
-  title: "Websites & Live Portals | William Zain",
-  description: "Direct links and interactive showcases for Zainy Beats, Amazon AI Book, I Wish You Were Here travel media, Calance, and LinkedIn.",
+  title: "Connections",
+  description: "Direct links and interactive showcases for Zainy Beats, Amazon AI books, I Wish You Were Here travel media, Calance, and LinkedIn.",
+  alternates: { canonical: "/websites" },
 };
 
 export default function WebsitesPage() {

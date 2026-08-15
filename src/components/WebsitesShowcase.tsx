@@ -31,7 +31,7 @@ export function WebsitesShowcase() {
             <span>Digital Ecosystem</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Websites & <span className="text-sky-600 dark:text-sky-400">Live Portals</span>
+            Connections & <span className="text-sky-600 dark:text-sky-400">Live Portals</span>
           </h2>
           <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl font-medium">
             Explore direct portals to William Zain's travel platform, published AI books on Amazon, and official social communities.

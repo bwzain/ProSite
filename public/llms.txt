@@ -1,0 +1,28 @@
+# William Zain
+
+> Enterprise IT architect, digital music producer (Zainy Beats / Billy Zain), and published AI author based in Orange County, California.
+
+## About
+
+William Zain built a 30+ year career in enterprise process automation and cloud architecture (Nintex, Calance, AWS, K2 Workflow, RPA). He now produces cinematic and electronic music as Zainy Beats, writes accessible AI books, and documents travel at I Wish You Were Here. He is a Distinguished Toastmaster (DTM).
+
+## Books
+
+- Introduction to Artificial Intelligence — https://www.amazon.com/dp/B0FG18QJWF
+- Generative AI for Content Creators: A Practical Guide — https://www.amazon.com/dp/B0FSSRXQHJ
+
+## Site
+
+- /about — biography and creative pillars
+- /creations — Zainy Beats, books, travel
+- /accomplishments — DTM, AWS, certifications
+- /contact — inquiries and Digital Twin chat
+- /blog — articles synced from Notion
+- /websites — Connections (external portals)
+
+## Profiles
+
+- LinkedIn: https://www.linkedin.com/in/bwzain
+- Amazon author: https://www.amazon.com/stores/William-Zain/author/B0FFN749GN
+- YouTube: https://www.youtube.com/@BillyZainVEVO-sz7zh/videos
+- Spotify: https://open.spotify.com/artist/4Ee9brJj365XxmzTtgz3cA
