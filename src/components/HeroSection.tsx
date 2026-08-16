@@ -18,7 +18,7 @@ export function HeroSection() {
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
             
             {/* Status Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-500/50 text-sky-900 dark:text-sky-300 text-xs font-mono font-bold tracking-wide shadow-sm">
+            <div className="hidden sm:inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-500/50 text-sky-900 dark:text-sky-300 text-xs font-mono font-bold tracking-wide shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
               <span>30+ YEARS ENTERPRISE IT ARCHITECT // DIGITAL MUSIC PRODUCER // PUBLISHED AUTHOR</span>
             </div>
@@ -34,7 +34,7 @@ export function HeroSection() {
             </div>
 
             {/* Quick Pillar Badges */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-2 pt-1">
+            <div className="hidden sm:flex flex-wrap justify-center lg:justify-start gap-2 pt-1">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-950/80 border border-blue-300 dark:border-blue-500/50 text-blue-900 dark:text-blue-200 text-xs font-bold">
                 <Headphones className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                 <span>Zainy Beats Studio</span>
@@ -57,7 +57,7 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2 w-full sm:w-auto">
               <Link
                 href="/contact#chat"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-blue-600 text-white font-extrabold text-xs sm:text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
+                className="hidden sm:flex w-full sm:w-auto items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-blue-600 text-white font-extrabold text-xs sm:text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
               >
                 <Bot className="w-4 h-4 text-cyan-200" />
                 <span>Chat with my AI Twin</span>
@@ -76,7 +76,7 @@ export function HeroSection() {
                 href="https://www.amazon.com/stores/William-Zain/author/B0FFN749GN"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
+                className="hidden sm:flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Buy AI Books</span>
