@@ -138,7 +138,7 @@ export function HeroSection() {
         </div>
 
         {/* High Contrast Stat Bar */}
-        <div className="w-full pt-8 sm:pt-10">
+        <div className="hidden sm:block w-full pt-8 sm:pt-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl">
             {PROFILE_DATA.stats.map((stat, idx) => (
               <div key={idx} className="flex flex-col items-center justify-center p-3 text-center border-r last:border-r-0 border-slate-200 dark:border-slate-800">
