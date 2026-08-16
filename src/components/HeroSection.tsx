@@ -7,7 +7,7 @@ export function HeroSection() {
   return (
     <section className="relative pt-28 sm:pt-32 pb-6 sm:pb-8 overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Subtle Background Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] bg-gradient-to-tr from-sky-400/15 via-indigo-500/15 to-purple-500/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] bg-gradient-to-tr from-sky-400/15 via-indigo-500/15 to-blue-500/15 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
         
@@ -26,7 +26,7 @@ export function HeroSection() {
             {/* Headline */}
             <div className="space-y-3">
               <h1 className="text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight leading-tight text-slate-900 dark:text-white">
-                William <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 dark:from-sky-400 dark:via-indigo-400 dark:to-purple-400">Zain</span>
+                William <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-indigo-600 to-blue-600 dark:from-sky-400 dark:via-indigo-400 dark:to-blue-400">Zain</span>
               </h1>
               <p className="text-lg sm:text-xl xl:text-2xl font-normal text-slate-700 dark:text-slate-200 leading-relaxed max-w-2xl">
                 Bridging <span className="font-bold text-sky-700 dark:text-sky-300">30+ years of Enterprise Process Automation & Cloud Architecture</span> with digital soundscapes, published AI literature, and global media.
@@ -35,8 +35,8 @@ export function HeroSection() {
 
             {/* Quick Pillar Badges */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 pt-1">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-950/80 border border-purple-300 dark:border-purple-500/50 text-purple-900 dark:text-purple-200 text-xs font-bold">
-                <Headphones className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-950/80 border border-blue-300 dark:border-blue-500/50 text-blue-900 dark:text-blue-200 text-xs font-bold">
+                <Headphones className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                 <span>Zainy Beats Studio</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-500/50 text-sky-900 dark:text-sky-200 text-xs font-bold">
@@ -57,7 +57,7 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2 w-full sm:w-auto">
               <Link
                 href="/contact#chat"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white font-extrabold text-xs sm:text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-blue-600 text-white font-extrabold text-xs sm:text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
               >
                 <Bot className="w-4 h-4 text-cyan-200" />
                 <span>Chat with my AI Twin</span>
@@ -76,7 +76,7 @@ export function HeroSection() {
                 href="https://www.amazon.com/stores/William-Zain/author/B0FFN749GN"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Buy AI Books</span>
@@ -91,7 +91,7 @@ export function HeroSection() {
             <div className="relative w-full max-w-xs sm:max-w-sm lg:max-w-[320px] group">
               
               {/* Outer Glowing Gradient Frame */}
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 opacity-30 group-hover:opacity-60 blur-xl transition-all duration-500"></div>
+              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-blue-600 opacity-30 group-hover:opacity-60 blur-xl transition-all duration-500"></div>
 
               {/* Portrait Container */}
               <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">

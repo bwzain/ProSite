@@ -83,7 +83,7 @@ export function AboutSection({ headingLevel = "h2" }: { headingLevel?: "h1" | "h
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <CheckCircle2 className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-xs font-bold text-slate-900 dark:text-white">Communication Mastery</h4>
                     <p className="text-[11px] text-slate-600 dark:text-slate-300">Toastmasters DTM explaining AI and tech to all audiences.</p>

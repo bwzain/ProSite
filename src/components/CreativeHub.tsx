@@ -96,12 +96,12 @@ export function CreativeHub() {
         
         {/* Header */}
         <div className="flex flex-col items-center text-center space-y-3 mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-100 dark:bg-purple-950/80 border border-purple-300 dark:border-purple-500/50 text-purple-900 dark:text-purple-300 text-xs font-mono uppercase font-bold tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950/80 border border-blue-300 dark:border-blue-500/50 text-blue-900 dark:text-blue-300 text-xs font-mono uppercase font-bold tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>Creative Hub & Media Studio</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Digital Music, <span className="text-purple-600 dark:text-purple-400">AI Literature</span> & Travel Media
+            Digital Music, <span className="text-blue-600 dark:text-blue-400">AI Literature</span> & Travel Media
           </h2>
           <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl font-medium">
             Explore Zainy Beats music video playlists, Spotify streams, William Zain's published AI books on Amazon, and global travel media.
@@ -115,8 +115,8 @@ export function CreativeHub() {
               onClick={() => handleTabClick("beats")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "beats"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : "text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
               }`}
             >
               <Headphones className="w-4 h-4" />
@@ -154,7 +154,7 @@ export function CreativeHub() {
           <div className="space-y-12">
             
             {/* YouTube Playlist Tiles Section */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-purple-200 dark:border-purple-900/50 shadow-xl space-y-6">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-blue-200 dark:border-blue-900/50 shadow-xl space-y-6">
               {/* Playlist Header */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
                 <div className="space-y-1">
@@ -189,7 +189,7 @@ export function CreativeHub() {
                 {playlist.videos.map((video) => (
                   <div
                     key={video.id}
-                    className="group rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-500 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                    className="group rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-500 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
                   >
                     {/* Thumbnail with Play Overlay — opens YouTube (embeds blocked for these VEVO tracks) */}
                     <a
@@ -218,7 +218,7 @@ export function CreativeHub() {
                       </span>
 
                       {/* Video Tag */}
-                      <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-200 border border-purple-500/40 text-[10px] font-mono font-bold z-10">
+                      <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-blue-950/90 text-blue-200 border border-blue-500/40 text-[10px] font-mono font-bold z-10">
                         {video.genre}
                       </span>
                     </a>
@@ -226,7 +226,7 @@ export function CreativeHub() {
                     {/* Content */}
                     <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
                       <div className="space-y-1.5">
-                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2">
+                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                           {video.title}
                         </h4>
                         <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 font-normal leading-relaxed">
@@ -239,7 +239,7 @@ export function CreativeHub() {
                           href={video.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
+                          className="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
                         >
                           <Play className="w-3.5 h-3.5" />
                           <span>Watch on YouTube</span>

@@ -38,7 +38,7 @@ export function Navbar() {
         
         {/* Brand Logo */}
         <Link href="/" onClick={() => handleNavClick("/")} className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-600 p-[2px] shadow-md group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-600 to-blue-600 p-[2px] shadow-md group-hover:scale-105 transition-transform">
             <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center font-black text-cyan-400 text-base">
               WZ
             </div>
@@ -90,7 +90,7 @@ export function Navbar() {
           {/* AI Twin Chat Button */}
           <Link
             href="/contact#chat"
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white shadow-md hover:scale-105 transition-all"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-sky-500 via-indigo-600 to-blue-600 text-white shadow-md hover:scale-105 transition-all"
           >
             <Bot className="w-3.5 h-3.5 text-cyan-200" />
             <span>AI Twin Chat</span>
@@ -100,7 +100,7 @@ export function Navbar() {
           <Link
             href="/creations?tab=book"
             onClick={() => handleNavClick("/creations")}
-            className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all"
+            className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all"
           >
             <BookOpen className="w-3.5 h-3.5" />
             <span>AI Books</span>
@@ -191,7 +191,7 @@ export function Navbar() {
                     href={PROFILE_DATA.book.amazonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-sm transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-all"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
                     <span>Amazon AI Book Page</span>

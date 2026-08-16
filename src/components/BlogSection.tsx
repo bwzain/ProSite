@@ -110,8 +110,8 @@ export function BlogSection() {
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                   activeCategory === cat
-                    ? "bg-purple-600 text-white shadow-md"
-                    : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-purple-500"
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-500"
                 }`}
               >
                 {cat}
@@ -130,7 +130,7 @@ export function BlogSection() {
                 setSearchQuery(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
 
@@ -154,7 +154,7 @@ export function BlogSection() {
             {featuredPosts.map((post) => (
               <div
                 key={post.id}
-                className="group rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-500 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-500 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div
@@ -171,21 +171,21 @@ export function BlogSection() {
                       />
                     ) : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none" />
-                    <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700 backdrop-blur-md text-purple-300 text-[10px] font-mono font-bold uppercase z-10">
-                      <Tag className="w-3 h-3 text-purple-400" />
+                    <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700 backdrop-blur-md text-blue-300 text-[10px] font-mono font-bold uppercase z-10">
+                      <Tag className="w-3 h-3 text-blue-400" />
                       <span>{post.category}</span>
                     </div>
                   </div>
 
                   <div className="p-6 space-y-3">
                     <div className="flex items-center gap-2 text-[11px] font-mono font-semibold text-slate-500 dark:text-slate-400">
-                      <Calendar className="w-3.5 h-3.5 text-purple-500" />
+                      <Calendar className="w-3.5 h-3.5 text-blue-500" />
                       <span>{post.date}</span>
                     </div>
 
                     <h3
                       onClick={() => setSelectedPost(post)}
-                      className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors leading-snug cursor-pointer"
+                      className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug cursor-pointer"
                     >
                       {post.title}
                     </h3>
@@ -199,7 +199,7 @@ export function BlogSection() {
                 <div className="p-6 pt-0 flex items-center gap-2">
                   <button
                     onClick={() => setSelectedPost(post)}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition-all shadow-sm"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-sm"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
                     <span>Read Article</span>
@@ -248,17 +248,17 @@ export function BlogSection() {
                     <time className="text-sm tracking-wide text-slate-500 dark:text-slate-400 sm:hidden">
                       {post.date}
                     </time>
-                    <h3 className="text-lg font-extrabold leading-snug tracking-tight text-slate-900 transition-colors group-hover:text-purple-600 dark:text-white dark:group-hover:text-purple-400 sm:text-xl">
+                    <h3 className="text-lg font-extrabold leading-snug tracking-tight text-slate-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400 sm:text-xl">
                       {post.title}
                     </h3>
                     <p className="mt-1 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">
                       {post.description}
                     </p>
-                    <span className="mt-2 inline-block font-mono text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 sm:hidden">
+                    <span className="mt-2 inline-block font-mono text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 sm:hidden">
                       {post.category}
                     </span>
                   </div>
-                  <span className="hidden pt-1 font-mono text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 sm:block sm:text-right">
+                  <span className="hidden pt-1 font-mono text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 sm:block sm:text-right">
                     {post.category}
                   </span>
                   <div className="relative h-[4.75rem] w-[4.75rem] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900 sm:h-[5.5rem] sm:w-[5.5rem]">
@@ -286,7 +286,7 @@ export function BlogSection() {
               <button
                 type="button"
                 onClick={() => setPage(currentPage - 1)}
-                className="rounded-xl px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-purple-600 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-purple-400"
+                className="rounded-xl px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
               >
                 Previous
               </button>
@@ -301,7 +301,7 @@ export function BlogSection() {
                 <span
                   key={n}
                   aria-current="page"
-                  className="rounded-xl bg-purple-600 px-3 py-2 font-bold text-white shadow-md"
+                  className="rounded-xl bg-blue-600 px-3 py-2 font-bold text-white shadow-md"
                 >
                   {n}
                 </span>
@@ -310,7 +310,7 @@ export function BlogSection() {
                   key={n}
                   type="button"
                   onClick={() => setPage(n)}
-                  className="rounded-xl px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-purple-600 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-purple-400"
+                  className="rounded-xl px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
                 >
                   {n}
                 </button>
@@ -321,7 +321,7 @@ export function BlogSection() {
               <button
                 type="button"
                 onClick={() => setPage(currentPage + 1)}
-                className="rounded-xl px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-purple-600 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-purple-400"
+                className="rounded-xl px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
               >
                 Next
               </button>
@@ -364,12 +364,12 @@ export function BlogSection() {
             {/* Modal Header Bar */}
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 border border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-300 text-xs font-mono font-bold uppercase">
-                  <Tag className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-950 border border-blue-300 dark:border-blue-800 text-blue-900 dark:text-blue-300 text-xs font-mono font-bold uppercase">
+                  <Tag className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                   {selectedPost.category}
                 </span>
                 <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-purple-500" />
+                  <Calendar className="w-3.5 h-3.5 text-blue-500" />
                   {selectedPost.date}
                 </span>
               </div>
@@ -406,7 +406,7 @@ export function BlogSection() {
                   </h3>
 
                   <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                    <h4 className="text-xs font-mono uppercase font-bold text-purple-600 dark:text-purple-400 mb-2">
+                    <h4 className="text-xs font-mono uppercase font-bold text-blue-600 dark:text-blue-400 mb-2">
                       Article Summary & Content
                     </h4>
                     <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-normal whitespace-pre-line">
@@ -422,7 +422,7 @@ export function BlogSection() {
                       href={toHttpsUrl(selectedPost.sourceUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition-all"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all"
                     >
                       <span>Visit External Source / Link</span>
                       <ExternalLink className="w-4 h-4" />

@@ -369,7 +369,7 @@ export const PROFILE_DATA = {
       category: "Book",
       description: "William Zain's practical guide to turning ideas into stunning images, videos, and music with generative AI.",
       image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
-      accentGlow: "from-pink-500 to-purple-600",
+      accentGlow: "from-pink-500 to-blue-600",
       featured: true,
       stats: [
         { label: "Platform", value: "Amazon Kindle/Print" },
@@ -384,7 +384,7 @@ export const PROFILE_DATA = {
       category: "Book",
       description: "Official Facebook author page for William Zain's AI books, reader community, literature news, and generative tech insights.",
       image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1200&auto=format&fit=crop",
-      accentGlow: "from-indigo-500 to-purple-600",
+      accentGlow: "from-indigo-500 to-blue-600",
       featured: true,
       stats: [
         { label: "Platform", value: "Facebook" },
@@ -534,7 +534,7 @@ export const PROFILE_DATA = {
       description: "Led an entire Toastmasters division to distinguished performance, mentoring club presidents and organizing speech contests.",
       iconName: "Award",
       badgeText: "Leadership Excellence",
-      highlightColor: "from-purple-500 to-indigo-600"
+      highlightColor: "from-blue-500 to-indigo-600"
     },
     {
       id: "acc-book-pub",
@@ -601,7 +601,7 @@ export const PROFILE_DATA = {
       description: "Rigorous foundation in computer science theory, algorithms, mainframe systems, and data architecture.",
       iconName: "GraduationCap",
       badgeText: "BS Computer Science",
-      highlightColor: "from-violet-400 to-purple-600"
+      highlightColor: "from-violet-400 to-blue-600"
     },
     {
       id: "acc-uci",

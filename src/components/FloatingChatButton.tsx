@@ -12,7 +12,7 @@ export function FloatingChatButton() {
     <div className="fixed bottom-6 right-6 z-50 group">
       <Link
         href="/contact#chat"
-        className="flex items-center gap-2.5 px-5 py-3.5 rounded-full bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white font-extrabold text-xs sm:text-sm shadow-2xl hover:shadow-sky-500/40 hover:scale-105 active:scale-95 transition-all border border-white/20"
+        className="flex items-center gap-2.5 px-5 py-3.5 rounded-full bg-gradient-to-r from-sky-500 via-indigo-600 to-blue-600 text-white font-extrabold text-xs sm:text-sm shadow-2xl hover:shadow-sky-500/40 hover:scale-105 active:scale-95 transition-all border border-white/20"
       >
         <div className="relative flex items-center justify-center">
           <Bot className="w-5 h-5 text-cyan-200" />

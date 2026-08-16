@@ -82,8 +82,8 @@ export function WebsitesShowcase() {
                   </div>
 
                   {website.featured && (
-                    <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-950/90 border border-purple-500 text-purple-200 text-[10px] font-mono font-bold z-10">
-                      <Sparkles className="w-3 h-3 text-purple-300" />
+                    <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-950/90 border border-blue-500 text-blue-200 text-[10px] font-mono font-bold z-10">
+                      <Sparkles className="w-3 h-3 text-blue-300" />
                       <span>Featured</span>
                     </div>
                   )}

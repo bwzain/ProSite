@@ -180,7 +180,7 @@ export function ContactSection() {
               </a>
 
               <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center gap-3 shadow-md">
-                <div className="p-3 rounded-2xl bg-purple-100 dark:bg-purple-950 border border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400">
+                <div className="p-3 rounded-2xl bg-blue-100 dark:bg-blue-950 border border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-400">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>

@@ -238,7 +238,7 @@ export function DigitalTwinChat() {
       <div className="p-4 sm:p-5 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-purple-600 p-[2px] shadow-md flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-blue-600 p-[2px] shadow-md flex items-center justify-center">
               <div className="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-cyan-400">
                 <Bot className="w-5 h-5" />
               </div>
@@ -253,7 +253,7 @@ export function DigitalTwinChat() {
               </h3>
             </div>
             <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-purple-500" />
+              <Sparkles className="w-3 h-3 text-blue-500" />
               <span>AI Interactive Representative • Gemma 4 31B</span>
             </p>
           </div>
