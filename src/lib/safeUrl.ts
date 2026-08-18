@@ -9,7 +9,8 @@ export function toHttpsUrl(raw: unknown, fallback = ""): string {
     const url = new URL(trimmed);
     if (url.protocol !== "https:") return fallback;
     if (!url.hostname) return fallback;
-    return url.href;
+    // Keep the original string so signed CMS URLs (Notion S3) stay valid.
+    return trimmed;
   } catch {
     return fallback;
   }

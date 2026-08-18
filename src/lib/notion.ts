@@ -1,4 +1,5 @@
 import { toHttpsUrl } from "@/lib/safeUrl";
+import { blogCardImageSrc } from "@/lib/youtube";
 
 export interface BlogPost {
   id: string;
@@ -48,9 +49,11 @@ function richTextPlain(richText: NotionRichText[] | undefined): string {
 }
 
 function featuredImageUrl(prop: NotionProperty | undefined): string {
-  if (!prop || prop.type !== "files" || !prop.files?.length) return "";
+  if (!prop) return "";
+  if (typeof prop.url === "string" && prop.url.trim()) return prop.url.trim();
+  if (!prop.files?.length) return "";
   const first = prop.files[0];
-  return first.file?.url || first.external?.url || "";
+  return (first.file?.url || first.external?.url || "").trim();
 }
 
 function mapPageToBlogPost(page: NotionPage): BlogPost {
@@ -75,12 +78,13 @@ function mapPageToBlogPost(page: NotionPage): BlogPost {
   const sourceUrlRaw =
     sourceProp?.type === "url" && sourceProp.url ? sourceProp.url : undefined;
   const sourceUrl = sourceUrlRaw ? toHttpsUrl(sourceUrlRaw) || undefined : undefined;
+  const image = blogCardImageSrc(featuredImageUrl(imageProp), sourceUrl);
 
   return {
     id: page.id,
     title: title || "Untitled Post",
     description,
-    image: toHttpsUrl(featuredImageUrl(imageProp)),
+    image,
     sourceUrl,
     category: category || "General",
     date,

@@ -1,9 +1,55 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookOpen, ExternalLink, Calendar, Tag, Search, X } from "lucide-react";
+import { BookOpen, ExternalLink, Calendar, Tag, Search, X, Play } from "lucide-react";
 import { BlogPost } from "@/lib/notion";
 import { toHttpsUrl } from "@/lib/safeUrl";
+import { blogCardImageSrc, isBlogPlaceholderImage, isYoutubeCardThumb } from "@/lib/youtube";
+
+function YoutubePlayMark({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center">
+      <span
+        className={`flex items-center justify-center rounded-full bg-slate-950/70 border border-white/30 text-white shadow-md ${
+          compact ? "h-8 w-8" : "h-12 w-12"
+        }`}
+      >
+        <Play className={`fill-white ${compact ? "h-3.5 w-3.5" : "h-5 w-5"}`} />
+      </span>
+    </div>
+  );
+}
+
+function BlogThumb({
+  post,
+  alt,
+  className,
+  compact = false,
+}: {
+  post: BlogPost;
+  alt: string;
+  className: string;
+  compact?: boolean;
+}) {
+  const href = blogCardImageSrc(post.image, post.sourceUrl);
+  const fromYoutube = isYoutubeCardThumb(post.image, post.sourceUrl);
+  const src = isBlogPlaceholderImage(href)
+    ? href
+    : `/api/blog-image/${encodeURIComponent(post.id)}`;
+  return (
+    <>
+      {/* Same-origin redirect keeps Notion signed URLs fresh. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        referrerPolicy={fromYoutube ? "no-referrer" : undefined}
+      />
+      {fromYoutube ? <YoutubePlayMark compact={compact} /> : null}
+    </>
+  );
+}
 
 export function BlogSection() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -161,15 +207,11 @@ export function BlogSection() {
                     onClick={() => setSelectedPost(post)}
                     className="relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-950 cursor-pointer"
                   >
-                    {toHttpsUrl(post.image) ? (
-                      // Notion file URLs expire and use hosts not listed in next.config.
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={toHttpsUrl(post.image)}
-                        alt={post.title}
-                        className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : null}
+                    <BlogThumb
+                      post={post}
+                      alt={post.title}
+                      className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none" />
                     <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700 backdrop-blur-md text-blue-300 text-[10px] font-mono font-bold uppercase z-10">
                       <Tag className="w-3 h-3 text-blue-400" />
@@ -262,14 +304,12 @@ export function BlogSection() {
                     {post.category}
                   </span>
                   <div className="relative h-[4.75rem] w-[4.75rem] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900 sm:h-[5.5rem] sm:w-[5.5rem]">
-                    {toHttpsUrl(post.image) ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={toHttpsUrl(post.image)}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : null}
+                    <BlogThumb
+                      post={post}
+                      alt=""
+                      compact
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 </div>
               </li>
@@ -386,16 +426,12 @@ export function BlogSection() {
             {/* Split Layout: Image on Left/Top, Description next to Image */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start">
               
-              {/* Image Column */}
               <div className="md:col-span-5 relative aspect-square sm:aspect-[4/3] md:aspect-[3/4] w-full rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-950 shadow-lg border border-slate-200 dark:border-slate-800 shrink-0">
-                {toHttpsUrl(selectedPost.image) ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={toHttpsUrl(selectedPost.image)}
-                    alt={selectedPost.title}
-                    className="h-full w-full object-cover"
-                  />
-                ) : null}
+                <BlogThumb
+                  post={selectedPost}
+                  alt={selectedPost.title}
+                  className="h-full w-full object-cover"
+                />
               </div>
 
               {/* Full Description & Details Column */}
