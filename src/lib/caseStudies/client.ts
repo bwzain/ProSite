@@ -76,9 +76,37 @@ export function isNotionAccessError(error: NotionApiError): boolean {
   return error.status === 404 && error.code === "object_not_found";
 }
 
+export function normalizeNotionId(raw: string): string {
+  const hex = raw.replace(/-/g, "").trim();
+  if (!/^[0-9a-fA-F]{32}$/.test(hex)) return raw.trim();
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    hex.slice(12, 16),
+    hex.slice(16, 20),
+    hex.slice(20),
+  ]
+    .join("-")
+    .toLowerCase();
+}
+
 export function getNotionConfig(): { apiKey: string; hubPageId: string } | null {
   const apiKey = process.env.NOTION_API_KEY?.trim();
-  const hubPageId = process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim();
-  if (!apiKey || !hubPageId) return null;
-  return { apiKey, hubPageId };
+  const hubRaw = process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim();
+  if (!apiKey || !hubRaw) return null;
+  return { apiKey, hubPageId: normalizeNotionId(hubRaw) };
+}
+
+/** Safe diagnostics for preview banner — never includes secrets. */
+export function getNotionConfigStatus(): {
+  hasApiKey: boolean;
+  hasHubPageId: boolean;
+  hubPageIdPreview: string | null;
+} {
+  const hubRaw = process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim() || null;
+  return {
+    hasApiKey: Boolean(process.env.NOTION_API_KEY?.trim()),
+    hasHubPageId: Boolean(hubRaw),
+    hubPageIdPreview: hubRaw ? normalizeNotionId(hubRaw) : null,
+  };
 }

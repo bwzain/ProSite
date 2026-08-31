@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getCaseStudyBySlug, getCaseStudySlugs } from "@/lib/caseStudies/caseStudies";
 import { CaseStudyDetailView } from "@/components/case-studies/CaseStudyDetail";
 
+export const revalidate = 300;
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };

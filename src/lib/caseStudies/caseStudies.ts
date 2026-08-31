@@ -5,7 +5,7 @@ import {
   firstParagraphTeaser,
   pageTitle,
 } from "./blocks";
-import { getNotionConfig, isNotionAccessError, notionFetch, notionFetchResult, NotionApiError } from "./client";
+import { getNotionConfig, getNotionConfigStatus, isNotionAccessError, notionFetch, notionFetchResult, NotionApiError } from "./client";
 import { getSeedDetail, getSeedHub } from "./seed";
 import { isDiscoveryCaseStudy } from "./dashboardLinks";
 import { slugifyTitle } from "./slug";
@@ -21,15 +21,21 @@ async function fetchPage(pageId: string, apiKey: string): Promise<NotionPage> {
   return notionFetch<NotionPage>(`/pages/${pageId}`, apiKey);
 }
 
-function previewHub(error: NotionApiError): CaseStudyHub {
-  if (isNotionAccessError(error)) {
-    console.warn(
-      "Case studies hub is not shared with ZainNotionAPI — serving preview seed.",
-    );
-  } else {
-    console.warn("Case studies Notion fetch failed — serving preview seed.", error.message);
+function previewHub(error?: NotionApiError, notionError?: string): CaseStudyHub {
+  if (error) {
+    if (isNotionAccessError(error)) {
+      console.warn(
+        "Case studies hub is not shared with ZainNotionAPI — serving preview seed.",
+      );
+    } else {
+      console.warn("Case studies Notion fetch failed — serving preview seed.", error.message);
+    }
   }
-  return { ...getSeedHub(), notionError: error.message };
+  return {
+    ...getSeedHub(),
+    notionError: notionError ?? error?.message,
+    configStatus: getNotionConfigStatus(),
+  };
 }
 
 async function buildTile(
@@ -62,8 +68,18 @@ async function buildTile(
 export async function getCaseStudiesHub(): Promise<CaseStudyHub> {
   const config = getNotionConfig();
   if (!config) {
-    console.warn("Notion config missing — serving case studies seed data.");
-    return getSeedHub();
+    const status = getNotionConfigStatus();
+    console.warn("Notion config missing — serving case studies seed data.", status);
+    const missing = [
+      !status.hasApiKey ? "NOTION_API_KEY" : null,
+      !status.hasHubPageId ? "NOTION_CASE_STUDIES_HUB_PAGE_ID" : null,
+    ]
+      .filter(Boolean)
+      .join(" and ");
+    return previewHub(
+      undefined,
+      `Missing ${missing || "Notion configuration"} in the server environment. Add it in Vercel and redeploy.`,
+    );
   }
 
   const { apiKey, hubPageId } = config;
@@ -96,7 +112,7 @@ export async function getCaseStudiesHub(): Promise<CaseStudyHub> {
     }
     console.warn("Case studies Notion fetch failed — serving preview seed.", error);
     const message = error instanceof Error ? error.message : "Unknown Notion error";
-    return { ...getSeedHub(), notionError: message };
+    return previewHub(undefined, message);
   }
 }
 

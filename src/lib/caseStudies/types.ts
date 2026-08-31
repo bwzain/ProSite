@@ -72,6 +72,12 @@ export type CaseStudyHub = {
   tiles: CaseStudyTile[];
   fromNotion: boolean;
   notionError?: string;
+  /** Present when falling back to seed — helps diagnose Vercel env issues. */
+  configStatus?: {
+    hasApiKey: boolean;
+    hasHubPageId: boolean;
+    hubPageIdPreview: string | null;
+  };
 };
 
 export type CaseStudyDetail = {
