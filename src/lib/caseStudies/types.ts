@@ -77,6 +77,7 @@ export type CaseStudyHub = {
     hasApiKey: boolean;
     hasHubPageId: boolean;
     hubPageIdPreview: string | null;
+    hubPageIdFromEnv?: boolean;
   };
 };
 

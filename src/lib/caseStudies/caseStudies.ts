@@ -70,15 +70,12 @@ export async function getCaseStudiesHub(): Promise<CaseStudyHub> {
   if (!config) {
     const status = getNotionConfigStatus();
     console.warn("Notion config missing — serving case studies seed data.", status);
-    const missing = [
-      !status.hasApiKey ? "NOTION_API_KEY" : null,
-      !status.hasHubPageId ? "NOTION_CASE_STUDIES_HUB_PAGE_ID" : null,
-    ]
-      .filter(Boolean)
-      .join(" and ");
+    const missing = [!status.hasApiKey ? "NOTION_API_KEY" : null].filter(Boolean).join(" and ");
     return previewHub(
       undefined,
-      `Missing ${missing || "Notion configuration"} in the server environment. Add it in Vercel and redeploy.`,
+      missing
+        ? `Missing ${missing} in the server environment. Add it in Vercel and redeploy.`
+        : "Notion configuration incomplete. Add NOTION_API_KEY in Vercel and redeploy.",
     );
   }
 

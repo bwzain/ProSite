@@ -45,8 +45,9 @@ export default async function CaseStudiesPage() {
               {status ? (
                 <p className="mt-2 text-xs opacity-80">
                   Env check: NOTION_API_KEY={status.hasApiKey ? "set" : "missing"};
-                  NOTION_CASE_STUDIES_HUB_PAGE_ID=
-                  {status.hasHubPageId ? status.hubPageIdPreview : "missing"}
+                  hub page ID=
+                  {status.hubPageIdPreview ?? "missing"}
+                  {status.hubPageIdFromEnv === false ? " (built-in default)" : ""}
                 </p>
               ) : null}
               {hub.notionError && !hub.notionError.startsWith("Missing ") ? (

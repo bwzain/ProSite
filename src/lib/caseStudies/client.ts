@@ -76,6 +76,10 @@ export function isNotionAccessError(error: NotionApiError): boolean {
   return error.status === 404 && error.code === "object_not_found";
 }
 
+/** Public Notion page ID — not a secret; used when Vercel env slot is unavailable. */
+export const DEFAULT_CASE_STUDIES_HUB_PAGE_ID =
+  "3cca1d09-a5f0-8089-a224-eabdf4e9575c";
+
 export function normalizeNotionId(raw: string): string {
   const hex = raw.replace(/-/g, "").trim();
   if (!/^[0-9a-fA-F]{32}$/.test(hex)) return raw.trim();
@@ -92,8 +96,10 @@ export function normalizeNotionId(raw: string): string {
 
 export function getNotionConfig(): { apiKey: string; hubPageId: string } | null {
   const apiKey = process.env.NOTION_API_KEY?.trim();
-  const hubRaw = process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim();
-  if (!apiKey || !hubRaw) return null;
+  const hubRaw =
+    process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim() ||
+    DEFAULT_CASE_STUDIES_HUB_PAGE_ID;
+  if (!apiKey) return null;
   return { apiKey, hubPageId: normalizeNotionId(hubRaw) };
 }
 
@@ -102,11 +108,14 @@ export function getNotionConfigStatus(): {
   hasApiKey: boolean;
   hasHubPageId: boolean;
   hubPageIdPreview: string | null;
+  hubPageIdFromEnv: boolean;
 } {
-  const hubRaw = process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim() || null;
+  const fromEnv = process.env.NOTION_CASE_STUDIES_HUB_PAGE_ID?.trim() || null;
+  const hubRaw = fromEnv || DEFAULT_CASE_STUDIES_HUB_PAGE_ID;
   return {
     hasApiKey: Boolean(process.env.NOTION_API_KEY?.trim()),
     hasHubPageId: Boolean(hubRaw),
-    hubPageIdPreview: hubRaw ? normalizeNotionId(hubRaw) : null,
+    hubPageIdPreview: normalizeNotionId(hubRaw),
+    hubPageIdFromEnv: Boolean(fromEnv),
   };
 }
