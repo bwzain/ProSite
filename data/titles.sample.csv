@@ -1,0 +1,61 @@
+id,title,type,year,runtimeMin,seasons,avgEpisodeMin,imdbRating,imdbVotes,tmdbPopularity,posterUrl,genres,maturityRating,country,macroRegion,dataImputed
+s1,Inception,Movie,2010,148,,,8.8,2500000,98.4,,Action|Sci-Fi|Thriller,PG-13,United States,North America,FALSE
+s2,Avengers: Infinity War,Movie,2018,149,,,8.4,1200000,120.1,,Action|Adventure|Sci-Fi,PG-13,United States,North America,FALSE
+s3,Spider-Man 3,Movie,2007,139,,,6.3,640000,72.8,,Action|Adventure,PG-13,United States,North America,FALSE
+s4,The Irishman,Movie,2019,209,,,7.8,430000,41.2,,Crime|Drama,R,United States,North America,FALSE
+s5,Roma,Movie,2018,135,,,7.7,170000,22.4,,Drama,R,Mexico,Latin America,FALSE
+s6,Squid Game,TV Show,2021,,1,54,8.0,650000,140.6,,Thriller|Drama,TV-MA,South Korea,Asia,FALSE
+s7,Attack on Titan,TV Show,2013,,4,24,9.0,520000,95.2,,Action|Animation|Drama,TV-MA,Japan,Asia,FALSE
+s8,Dark,TV Show,2017,,3,50,8.7,430000,48.1,,Sci-Fi|Mystery|Drama,TV-MA,Germany,Europe,FALSE
+s9,Money Heist,TV Show,2017,,5,50,8.2,540000,88.4,,Crime|Thriller,TV-MA,Spain,Europe,FALSE
+s10,Stranger Things,TV Show,2016,,4,55,8.7,1400000,110.3,,Sci-Fi|Horror|Drama,TV-14,United States,North America,FALSE
+s11,The Crown,TV Show,2016,,6,58,8.6,280000,39.7,,Drama|History,TV-MA,United Kingdom,Europe,FALSE
+s12,Sacred Games,TV Show,2018,,2,50,8.5,110000,18.9,,Crime|Thriller,TV-MA,India,Asia,FALSE
+s13,Lupin,TV Show,2021,,3,45,7.5,160000,44.6,,Crime|Mystery,TV-MA,France,Europe,FALSE
+s14,Narcos,TV Show,2015,,3,49,8.8,520000,52.1,,Crime|Drama,TV-MA,Colombia,Latin America,FALSE
+s15,The Platform,Movie,2019,94,,,7.0,270000,35.4,,Horror|Sci-Fi|Thriller,TV-MA,Spain,Europe,FALSE
+s16,Extraction,Movie,2020,116,,,6.8,240000,61.2,,Action|Thriller,R,United States,North America,FALSE
+s17,Minnal Murali,Movie,2021,158,,,7.8,42000,12.4,,Action|Comedy|Fantasy,TV-14,India,Asia,FALSE
+s18,The Night Manager,TV Show,2016,,1,58,8.1,130000,16.8,,Thriller|Drama,TV-MA,United Kingdom,Europe,FALSE
+s19,Fauda,TV Show,2015,,4,45,8.3,32000,14.1,,Action|Thriller,TV-MA,Israel,MENA,FALSE
+s20,Cairo Conspiracy,Movie,2022,126,,,7.1,18000,9.6,,Drama|Thriller,PG-13,Egypt,MENA,FALSE
+s21,Ramy,TV Show,2019,,3,30,8.0,18000,11.2,,Comedy|Drama,TV-MA,United States,North America,TRUE
+s22,The Kingdom,TV Show,2020,,3,42,7.4,9000,13.5,,Drama,TV-MA,Saudi Arabia,MENA,TRUE
+s23,Baby,TV Show,2018,,3,40,6.8,14000,10.8,,Drama,TV-MA,Italy,Europe,FALSE
+s24,Elite,TV Show,2018,,8,50,7.2,90000,46.2,,Drama|Thriller,TV-MA,Spain,Europe,FALSE
+s25,The Power of the Dog,Movie,2021,126,,,6.8,190000,28.1,,Drama|Western,R,New Zealand,Oceania,FALSE
+s26,Lion,Movie,2016,118,,,8.0,250000,19.4,,Drama,PG-13,Australia,Oceania,FALSE
+s27,The Castle,Movie,1997,85,,,7.6,18000,5.1,,Comedy,PG,Australia,Oceania,FALSE
+s28,Lionheart,Movie,2018,95,,,5.6,2100,4.2,,Comedy|Drama,PG-13,Nigeria,Sub-Saharan Africa,TRUE
+s29,Tsotsi,Movie,2005,94,,,7.2,34000,6.8,,Crime|Drama,R,South Africa,Sub-Saharan Africa,FALSE
+s30,The Boy Who Harnessed the Wind,Movie,2019,113,,,7.6,37000,8.9,,Drama,PG-13,United Kingdom,Europe,FALSE
+s31,Queen Sono,TV Show,2020,,1,45,6.4,4200,7.1,,Action|Drama,TV-MA,South Africa,Sub-Saharan Africa,TRUE
+s32,Parasite,Movie,2019,132,,,8.5,980000,78.4,,Drama|Thriller,R,South Korea,Asia,FALSE
+s33,Oldboy,Movie,2003,120,,,8.4,640000,31.6,,Action|Drama|Mystery,R,South Korea,Asia,FALSE
+s34,Your Name,Movie,2016,106,,,8.4,310000,54.2,,Animation|Drama|Romance,PG,Japan,Asia,FALSE
+s35,The Witcher,TV Show,2019,,3,58,8.0,620000,97.5,,Action|Fantasy,TV-MA,Poland,Europe,FALSE
+s36,Bridgerton,TV Show,2020,,3,60,7.4,180000,82.1,,Drama|Romance,TV-MA,United Kingdom,Europe,FALSE
+s37,Emily in Paris,TV Show,2020,,4,30,6.8,120000,64.3,,Comedy|Romance,TV-MA,United States,North America,FALSE
+s38,Don't Look Up,Movie,2021,138,,,7.2,610000,55.8,,Comedy|Sci-Fi,R,United States,North America,FALSE
+s39,Glass Onion,Movie,2022,139,,,7.1,430000,49.2,,Comedy|Mystery,PG-13,United States,North America,FALSE
+s40,The Beekeeper,Movie,2024,105,,,6.3,89000,68.4,,Action|Thriller,R,United States,North America,FALSE
+s41,Leave the World Behind,Movie,2023,141,,,6.4,140000,52.7,,Drama|Thriller,R,United States,North America,FALSE
+s42,All Quiet on the Western Front,Movie,2022,148,,,7.8,250000,33.9,,Drama|War,R,Germany,Europe,FALSE
+s43,Anatomy of a Fall,Movie,2023,151,,,7.7,180000,21.5,,Drama|Mystery,R,France,Europe,FALSE
+s44,Drive My Car,Movie,2021,179,,,7.6,85000,9.8,,Drama,NR,Japan,Asia,FALSE
+s45,The Eight Hundred,Movie,2020,147,,,6.7,12000,8.4,,Action|War,R,China,Asia,TRUE
+s46,RRR,Movie,2022,187,,,7.8,180000,26.4,,Action|Drama,PG-13,India,Asia,FALSE
+s47,City of God,Movie,2002,130,,,8.6,830000,24.1,,Crime|Drama,R,Brazil,Latin America,FALSE
+s48,Roma Norte,Movie,2018,88,,,6.1,1200,3.4,,Drama,TV-MA,Mexico,Latin America,TRUE
+s49,Ted Lasso,TV Show,2020,,3,30,8.8,360000,43.2,,Comedy,TV-MA,United States,North America,FALSE
+s50,The Bear,TV Show,2022,,3,30,8.6,220000,51.8,,Comedy|Drama,TV-MA,United States,North America,FALSE
+s51,Wednesday,TV Show,2022,,1,50,8.1,420000,102.4,,Comedy|Fantasy|Mystery,TV-14,United States,North America,FALSE
+s52,1899,TV Show,2022,,1,50,7.4,110000,29.6,,Mystery|Sci-Fi,TV-MA,Germany,Europe,FALSE
+s53,Alice in Borderland,TV Show,2020,,2,50,7.6,90000,38.7,,Action|Sci-Fi|Thriller,TV-MA,Japan,Asia,FALSE
+s54,Kingdom,TV Show,2019,,2,45,8.3,55000,22.8,,Horror|Thriller,TV-MA,South Korea,Asia,FALSE
+s55,The Rain,TV Show,2018,,3,40,6.3,46000,15.2,,Drama|Sci-Fi,TV-MA,Sweden,Europe,FALSE
+s56,Sweet Tooth,TV Show,2021,,3,45,7.7,78000,27.4,,Adventure|Drama|Fantasy,TV-14,New Zealand,Oceania,FALSE
+s57,Outer Banks,TV Show,2020,,4,50,7.5,85000,48.9,,Action|Drama|Mystery,TV-14,United States,North America,FALSE
+s58,The Gray Man,Movie,2022,122,,,6.5,230000,44.1,,Action|Thriller,PG-13,United States,North America,FALSE
+s59,Red Notice,Movie,2021,118,,,6.3,320000,58.6,,Action|Comedy,PG-13,United States,North America,FALSE
+s60,The Adam Project,Movie,2022,106,,,6.7,210000,36.2,,Action|Comedy|Sci-Fi,PG-13,United States,North America,FALSE

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ["react-simple-maps"],
   // Allow phone / LAN testing against the machine's local IP in `next dev`
   allowedDevOrigins: ["192.168.12.140", "localhost", "127.0.0.1"],
   async headers() {
@@ -79,6 +80,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "s3.us-west-2.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
       },
     ],
   },

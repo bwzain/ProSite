@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { PROFILE_DATA } from "@/data/profile";
 import { getNotionBlogPosts } from "@/lib/notion";
+import { getCaseStudiesHub, getCaseStudyBySlug } from "@/lib/caseStudies/caseStudies";
+import { isDiscoveryCaseStudy } from "@/lib/caseStudies/dashboardLinks";
+import { richTextPlain } from "@/lib/caseStudies/blocks";
+import type { RenderBlock } from "@/lib/caseStudies/types";
 import { checkChatRateLimit, getClientIp, rejectOversizedJson } from "@/lib/chatRateLimit";
 import { toHttpsUrl } from "@/lib/safeUrl";
+import { getSiteUrl } from "@/lib/siteUrl";
 import {
   appendModelTurn,
   appendUserTurn,
@@ -14,6 +19,19 @@ import {
 
 export const dynamic = "force-dynamic";
 
+function excerptFromBlocks(blocks: RenderBlock[], maxChars = 280): string {
+  const parts: string[] = [];
+  for (const block of blocks) {
+    if (!block.richText?.length) continue;
+    const text = richTextPlain(block.richText).trim();
+    if (!text) continue;
+    parts.push(text);
+    if (parts.join(" ").length >= maxChars) break;
+  }
+  const joined = parts.join(" ").replace(/\s+/g, " ").trim();
+  if (joined.length <= maxChars) return joined;
+  return `${joined.slice(0, maxChars - 3)}...`;
+}
 async function fetchRssFeedForChat() {
   try {
     const res = await fetch("https://i-wish-you-were-here.com/rss.xml", {
@@ -137,16 +155,38 @@ export async function POST(req: Request) {
       "artist",
       "popular",
     ];
+    const caseStudyTriggers = [
+      "case study",
+      "case studies",
+      "consulting",
+      "portfolio",
+      "solution consultant",
+      "dashboard",
+      "business dashboard",
+      "discovery",
+      "netflix",
+      "interactive dashboard",
+      "large datasets",
+      "data analysis",
+      "workflow",
+      "automation",
+      "make.com",
+      "vibe coding",
+      "ai agent coding",
+      "ai agent",
+    ];
 
     const containsTrigger = (text: string, triggers: string[]) =>
       triggers.some((trig) => {
-        if (trig.includes(" ")) return text.includes(trig);
+        // Phrases and dotted tokens (e.g. make.com) use substring match
+        if (trig.includes(" ") || trig.includes(".")) return text.includes(trig);
         return new RegExp(`\\b${trig}\\b`, "i").test(text);
       });
 
     const shouldFetchBlogs = containsTrigger(lastUserMessage, blogTriggers);
     const shouldFetchTravel = containsTrigger(lastUserMessage, travelTriggers);
     const shouldFetchMusic = containsTrigger(lastUserMessage, musicTriggers);
+    const shouldFetchCaseStudies = containsTrigger(lastUserMessage, caseStudyTriggers);
 
     let selectiveContext = "";
 
@@ -199,6 +239,71 @@ export async function POST(req: Request) {
 ${musicList}`;
     }
 
+    if (shouldFetchCaseStudies) {
+      try {
+        const hub = await getCaseStudiesHub();
+        const site = getSiteUrl();
+        const hubSummary = excerptFromBlocks(hub.executiveSummary);
+        const tileLines = hub.tiles
+          .map((tile) => {
+            const studyUrl = `${site}/case-studies/${tile.slug}`;
+            const teaser = tile.teaser?.trim() || "Strategic consulting case study.";
+            const discovery =
+              isDiscoveryCaseStudy(tile.slug)
+                ? ` Also available: [Open Discovery Dashboard](${site}/discovery)`
+                : "";
+            return `- "${tile.title}": ${teaser} [Read case study](${studyUrl})${discovery}`;
+          })
+          .join("\n");
+
+        selectiveContext += `\n\n### LIVE CASE STUDIES ATTACHED ON-DEMAND:
+- Hub: ${hub.title}${hubSummary ? ` — ${hubSummary}` : ""}
+- Portfolio index: [Case Studies](${site}/case-studies)
+${tileLines}`;
+
+        // Light detail enrichment when the user names a specific study
+        const matchedTile = hub.tiles.find((tile) => {
+          const titleLower = tile.title.toLowerCase();
+          if (lastUserMessage.includes(tile.slug) || lastUserMessage.includes(titleLower)) {
+            return true;
+          }
+          if (titleLower.includes("netflix") && lastUserMessage.includes("netflix")) return true;
+          if (
+            titleLower.includes("interactive dashboard") &&
+            lastUserMessage.includes("interactive dashboard")
+          ) {
+            return true;
+          }
+          if (
+            (titleLower.includes("multi-channel") || titleLower.includes("autonomous")) &&
+            (lastUserMessage.includes("multi-channel") ||
+              lastUserMessage.includes("autonomous") ||
+              lastUserMessage.includes("make.com"))
+          ) {
+            return true;
+          }
+          return false;
+        });
+
+        if (matchedTile) {
+          const detail = await getCaseStudyBySlug(matchedTile.slug);
+          if (detail?.blocks?.length) {
+            const detailExcerpt = excerptFromBlocks(detail.blocks, 600);
+            if (detailExcerpt) {
+              selectiveContext += `\n\n### FOCUS CASE STUDY DETAIL ("${detail.title}"):
+${detailExcerpt}
+Link: ${site}/case-studies/${detail.slug}${
+                detail.showDashboardCta ? `\nLive demo: ${site}/discovery` : ""
+              }`;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to fetch case studies for chat context", e);
+      }
+    }
+
+    const siteUrl = getSiteUrl();
     const systemPrompt = `You ARE William Zain (also known as Bill or Billy). You speak directly to the user as yourself in the FIRST PERSON ("I", "my", "me", "myself").
 
 CRITICAL PERSONA DIRECTIVES:
@@ -250,15 +355,21 @@ CRITICAL PERSONA DIRECTIVES:
 6. MY TOASTMASTERS & PUBLIC SPEAKING LEADERSHIP:
 - Distinguished Toastmaster (DTM): The highest accolade in Toastmasters International for public speaking, communication, and executive leadership.
 - Awarded Distinguished Division Director.
+
+7. MY CASE STUDIES & LIVE DEMOS:
+- Case Studies portfolio: ${siteUrl}/case-studies — strategic consulting highlights spanning enterprise automation, AI content systems, and interactive analytics.
+- Live Content Discovery Dashboard demo: ${siteUrl}/discovery — interactive Netflix catalog exploration (geography, genre yield, popularity, shortlists).
+- When LIVE CASE STUDIES context is attached below, use those titles, teasers, and links. Prefer linking to the specific case study page and to /discovery when the project includes a live dashboard.
 ${selectiveContext}
 
 ### MY BEHAVIOR & STYLE GUIDELINES:
 - Speak as William Zain (Bill/Billy) in an articulate, welcoming, intelligent, and authentic voice.
 - Mix enterprise engineering precision with creative warmth.
 - Give rich, helpful, direct answers using "I" and "my".
-- Whenever relevant, include helpful markdown links e.g. [my Amazon book](https://www.amazon.com/dp/B0FG18QJWF), [my travel platform](https://i-wish-you-were-here.com/), [my YouTube playlist](${PROFILE_DATA.youtubePlaylist.url}), or [my LinkedIn profile](${PROFILE_DATA.linkedIn}).
+- Whenever relevant, include helpful markdown links e.g. [my Amazon book](https://www.amazon.com/dp/B0FG18QJWF), [my travel platform](https://i-wish-you-were-here.com/), [my YouTube playlist](${PROFILE_DATA.youtubePlaylist.url}), [my LinkedIn profile](${PROFILE_DATA.linkedIn}), [my Case Studies](${siteUrl}/case-studies), or [my Discovery Dashboard](${siteUrl}/discovery).
+- When discussing consulting projects, dashboards, Netflix data work, workflow automation, Make.com, vibe coding, or AI agent builds, cite my Case Studies and link to the matching pages.
 - Keep formatting clean with bullet points and short paragraphs.
-- If asked about something outside my background, politely pivot back to my experience in enterprise automation, AI literature, music, or travel.`;
+- If asked about something outside my background, politely pivot back to my experience in enterprise automation, AI literature, music, travel, or case studies.`;
 
     // History rebuilt only from server-stored turns
     const geminiContents = turns.map((t) => ({

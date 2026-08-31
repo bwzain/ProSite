@@ -27,10 +27,16 @@ export function Navbar() {
     { name: "About Me", href: "/about", icon: Compass, desc: "Enterprise legacy & creative pivot" },
     { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, AI Books & Travel" },
     { name: "Blog", href: "/blog", icon: BookOpen, desc: "Notion-powered insights & AI guides" },
+    { name: "Case Studies", href: "/case-studies", icon: Briefcase, desc: "Strategic consulting highlights & live demos" },
     { name: "Connections", href: "/websites", icon: Globe, desc: "Digital ecosystem & live portals" },
     { name: "Accomplishments", href: "/accomplishments", icon: Trophy, desc: "Toastmasters DTM & Certifications" },
     { name: "Contact", href: "/contact", icon: Mail, desc: "Direct inquiries & collaboration" },
   ];
+
+  const isNavActive = (href: string) =>
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-md">
@@ -57,7 +63,7 @@ export function Navbar() {
         {/* Desktop Links */}
         <nav className="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = isNavActive(item.href);
             return (
               <Link
                 key={item.href}
@@ -151,7 +157,7 @@ export function Navbar() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = pathname === item.href;
+                  const isActive = isNavActive(item.href);
                   return (
                     <Link
                       key={item.href}

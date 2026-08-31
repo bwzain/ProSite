@@ -46,3 +46,18 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #38bdf8;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-shortlist {
+    display: block !important;
+  }
+
+  body {
+    background: white !important;
+    color: #0f172a !important;
+  }
+}
