@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { BookOpen, ExternalLink, Calendar, Tag, Search, X, Play } from "lucide-react";
 import { BlogPost } from "@/lib/notion";
 import { toHttpsUrl } from "@/lib/safeUrl";
-import { blogCardImageSrc, isBlogPlaceholderImage, isYoutubeCardThumb } from "@/lib/youtube";
+import { blogCardImageSrc, isBlogPlaceholderImage, isYoutubeCardThumb, youtubeVideoId } from "@/lib/youtube";
 
 function YoutubePlayMark({ compact = false }: { compact?: boolean }) {
   return (
@@ -460,7 +460,7 @@ export function BlogSection() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all"
                     >
-                      <span>Visit External Source / Link</span>
+                      <span>{selectedPost.sourceUrl && youtubeVideoId(selectedPost.sourceUrl) ? "Watch on YouTube" : "Visit External Source / Link"}</span>
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   ) : (
