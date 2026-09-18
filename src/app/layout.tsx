@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navbar } from "@/components/Navbar";
@@ -6,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { FloatingChatButton } from "@/components/FloatingChatButton";
 import { JsonLd } from "@/components/JsonLd";
 import { getSiteUrl } from "@/lib/siteUrl";
+
+const GA_MEASUREMENT_ID = "G-TNJE5WLQW0";
 
 const SITE_TITLE = "William Zain | Enterprise IT Architect, Music Producer & Published AI Author";
 const SITE_DESCRIPTION =
@@ -62,6 +65,19 @@ export default function RootLayout({
         <link rel="preconnect" href="https://img.youtube.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.youtube.com" />
         <link rel="dns-prefetch" href="https://open.spotify.com" />
+        {/* Google tag (gtag.js) */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </head>
       <body
         suppressHydrationWarning
