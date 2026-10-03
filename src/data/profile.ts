@@ -38,6 +38,7 @@ export interface BookItem {
   author: string;
   coverImage: string;
   amazonUrl: string;
+  paperbackUrl?: string;
   description: string;
   themeColor: {
     border: string;
@@ -46,7 +47,7 @@ export interface BookItem {
     accentGlow: string;
   };
   features: string[];
-  chapters: { number: number; title: string; desc: string }[];
+  chapters?: { number: number; title: string; desc: string }[];
 }
 
 export interface WebsiteLink {
@@ -104,7 +105,7 @@ export const PROFILE_DATA = {
   stats: [
     { label: "Years in Enterprise Tech", value: "30+" },
     { label: "Automation Solutions Built", value: "100s" },
-    { label: "Published Books", value: "2" },
+    { label: "Published Books", value: "3" },
     { label: "Distinguished Toastmaster", value: "DTM" },
   ],
 
@@ -159,6 +160,29 @@ export const PROFILE_DATA = {
   },
 
   books: [
+    {
+      id: "book-3",
+      title: "The Augmented Candidate",
+      subtitle: "A Non-Engineer's Guide to AI-Powered Job Search, Workflow Automation, and Long-Term Career Resilience",
+      author: "William Zain",
+      coverImage: "/images/augmented-kindle.png",
+      amazonUrl: "https://www.amazon.com/dp/B0HL74XDKQ",
+      paperbackUrl: "https://www.amazon.com/dp/B0HL98PPHR",
+      description: "Stop sending resumes into the algorithmic void. Start operating as an AI-augmented strategic asset.",
+      themeColor: {
+        border: "border-indigo-200 dark:border-indigo-900/50",
+        text: "text-indigo-600 dark:text-indigo-400",
+        bg: "bg-indigo-600 hover:bg-indigo-500",
+        accentGlow: "hover:shadow-indigo-500/20"
+      },
+      features: [
+        "Rapid job-hunt engine for landing interviews faster",
+        "Master prompt architecture & voice simulation",
+        "Enterprise upskilling & proof-of-work portfolios",
+        "Optimize your LinkedIn profile for inbound recruiter search algorithms"
+      ],
+      chapters: []
+    },
     {
       id: "book-1",
       title: "Introduction to Artificial Intelligence",

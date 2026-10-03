@@ -115,7 +115,7 @@ export function CreativeHubSpotlight() {
                   <BookOpen className="w-3 h-3 text-sky-600 dark:text-sky-400" />
                   AI Literature
                 </span>
-                <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold">2 Amazon Books</span>
+                <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold">3 Amazon Books</span>
               </div>
 
               {/* Side-by-Side Miniature Book Covers */}

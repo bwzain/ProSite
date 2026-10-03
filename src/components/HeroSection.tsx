@@ -29,7 +29,7 @@ export function HeroSection() {
                 William <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-indigo-600 to-blue-600 dark:from-sky-400 dark:via-indigo-400 dark:to-blue-400">Zain</span>
               </h1>
               <p className="text-lg sm:text-xl xl:text-2xl font-normal text-slate-700 dark:text-slate-200 leading-relaxed max-w-2xl">
-                Bridging <span className="font-bold text-sky-700 dark:text-sky-300">30+ years of Enterprise Process Automation & Cloud Architecture</span> with digital soundscapes, published AI literature, and global media.
+                Bridging <span className="font-bold text-sky-700 dark:text-sky-300">30+ years of Enterprise Process Automation & Cloud Architecture</span> with digital soundscapes, published books, and global media.
               </p>
             </div>
 
@@ -41,7 +41,7 @@ export function HeroSection() {
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-500/50 text-sky-900 dark:text-sky-200 text-xs font-bold">
                 <BookOpen className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-                <span>Published AI Author</span>
+                <span>Published Author</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold">
                 <Cpu className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -79,7 +79,7 @@ export function HeroSection() {
                 className="hidden sm:flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
               >
                 <BookOpen className="w-4 h-4" />
-                <span>Buy AI Books</span>
+                <span>Buy Zain's Books</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-80" />
               </a>
             </div>

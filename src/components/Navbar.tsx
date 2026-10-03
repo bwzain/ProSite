@@ -25,7 +25,7 @@ export function Navbar() {
   const navItems = [
     { name: "Overview", href: "/", icon: Sparkles, desc: "Portfolio summary & quick spotlights" },
     { name: "About Me", href: "/about", icon: Compass, desc: "Enterprise legacy & creative pivot" },
-    { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, AI Books & Travel" },
+    { name: "Creative Hub", href: "/creations", icon: Headphones, desc: "Zainy Beats, Published Books & Travel" },
     { name: "Blog", href: "/blog", icon: BookOpen, desc: "Notion-powered insights & AI guides" },
     { name: "Case Studies", href: "/case-studies", icon: Briefcase, desc: "Strategic consulting highlights & live demos" },
     { name: "Connections", href: "/websites", icon: Globe, desc: "Digital ecosystem & live portals" },
@@ -102,14 +102,14 @@ export function Navbar() {
             <span>AI Twin Chat</span>
           </Link>
 
-          {/* AI Books Button */}
+          {/* Published Books Button */}
           <Link
             href="/creations?tab=book"
             onClick={() => handleNavClick("/creations")}
             className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all"
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>AI Books</span>
+            <span>Published Books</span>
           </Link>
 
           {/* Mobile / Full Menu Drawer Toggle */}
@@ -200,7 +200,7 @@ export function Navbar() {
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-all"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>Amazon AI Book Page</span>
+                    <span>Amazon Book Page</span>
                     <ExternalLink className="w-3 h-3 opacity-80" />
                   </a>
 
