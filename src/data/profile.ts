@@ -43,6 +43,7 @@ export interface BookItem {
   themeColor: {
     border: string;
     text: string;
+    textLight?: string;
     bg: string;
     accentGlow: string;
   };
@@ -162,26 +163,32 @@ export const PROFILE_DATA = {
   books: [
     {
       id: "book-3",
-      title: "The Augmented Candidate",
-      subtitle: "A Non-Engineer's Guide to AI-Powered Job Search, Workflow Automation, and Long-Term Career Resilience",
+      title: "From Overlooked to Hired",
+      subtitle: "Use AI to Find the Right Roles, Demonstrate Your Skills, and Stand Out in Interviews",
       author: "William Zain",
-      coverImage: "/images/augmented-kindle.png",
+      coverImage: "/images/overlooked-to-hired.png",
       amazonUrl: "https://www.amazon.com/dp/B0HL74XDKQ",
-      paperbackUrl: "https://www.amazon.com/dp/B0HL98PPHR",
-      description: "Stop sending resumes into the algorithmic void. Start operating as an AI-augmented strategic asset.",
+      paperbackUrl: "https://www.amazon.com/dp/B0HPHLZBDX",
+      description: "You have experience. You have skills. Yet after hours spent tailoring applications, the response is often silence.",
       themeColor: {
         border: "border-indigo-200 dark:border-indigo-900/50",
         text: "text-indigo-600 dark:text-indigo-400",
+        textLight: "text-indigo-600 dark:text-indigo-300",
         bg: "bg-indigo-600 hover:bg-indigo-500",
         accentGlow: "hover:shadow-indigo-500/20"
       },
       features: [
-        "Rapid job-hunt engine for landing interviews faster",
-        "Master prompt architecture & voice simulation",
-        "Enterprise upskilling & proof-of-work portfolios",
-        "Optimize your LinkedIn profile for inbound recruiter search algorithms"
+        "A practical, step-by-step guide",
+        "Shows you how to use AI throughout your job search",
+        "Strengthen your resume and prepare for interviews",
+        "Build practical AI skills and demonstrate them"
       ],
-      chapters: []
+      chapters: [
+        { number: 1, title: "The New Rules of the Game", desc: "A one-page target role description defining the operational problems you solve." },
+        { number: 2, title: "The 60-Minute Skill Gap Audit", desc: "A three-item Skill Delta list grounded in active target job postings." },
+        { number: 3, title: "Clear Conversations with AI", desc: "A reusable personal prompt library containing a requisition de-constructor." },
+        { number: 4, title: "18 more highly informative chapters", desc: "The chapters replace passive job hunting with an agile, three-stage operational workflow." }
+      ]
     },
     {
       id: "book-1",
@@ -194,6 +201,7 @@ export const PROFILE_DATA = {
       themeColor: {
         border: "border-sky-200 dark:border-sky-900/50",
         text: "text-sky-600 dark:text-sky-400",
+        textLight: "text-sky-600 dark:text-sky-300",
         bg: "bg-sky-600 hover:bg-sky-500",
         accentGlow: "hover:shadow-sky-500/20"
       },
@@ -221,6 +229,7 @@ export const PROFILE_DATA = {
       themeColor: {
         border: "border-pink-200 dark:border-pink-900/50",
         text: "text-pink-600 dark:text-pink-400",
+        textLight: "text-pink-600 dark:text-pink-300",
         bg: "bg-pink-600 hover:bg-pink-500",
         accentGlow: "hover:shadow-pink-500/20"
       },

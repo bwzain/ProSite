@@ -416,7 +416,7 @@ export function CreativeHub() {
                           href={b.paperbackUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border ${b.themeColor.border} ${b.themeColor.text} font-bold text-sm shadow-md hover:border-slate-400 transition-all`}
+                          className={`w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border ${b.themeColor.border} ${b.themeColor.textLight ?? b.themeColor.text} font-bold text-sm shadow-md hover:border-slate-400 transition-all`}
                         >
                           <BookOpen className="w-4 h-4" />
                           <span>Buy Paperback</span>
@@ -424,29 +424,31 @@ export function CreativeHub() {
                         </a>
                       )}
 
-                      {b.chapters && b.chapters.length > 0 && (
-                        <button
-                          onClick={() =>
-                            setExpandedBookIds((prev) => ({ ...prev, [b.id]: !prev[b.id] }))
-                          }
-                          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold text-sm hover:border-slate-400 transition-all"
-                        >
-                          <span>{isExpanded ? "Hide Chapter Overview" : "View Chapter Overview"}</span>
-                          <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-                        </button>
-                      )}
+                      <button
+                        onClick={() =>
+                          setExpandedBookIds((prev) => ({ ...prev, [b.id]: !prev[b.id] }))
+                        }
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold text-sm hover:border-slate-400 transition-all"
+                      >
+                        <span>{isExpanded ? "Hide Chapter Overview" : "Read Chapter Overview"}</span>
+                        <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                      </button>
                     </div>
 
-                    {isExpanded && b.chapters && b.chapters.length > 0 && (
+                    {isExpanded && (
                       <div className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border ${b.themeColor.border} text-xs text-slate-800 dark:text-slate-200 space-y-2`}>
                         <div className={`font-bold ${b.themeColor.text} uppercase font-mono`}>Chapter Overview</div>
-                        <ul className="space-y-1.5 list-disc list-inside">
-                          {b.chapters.map((ch) => (
-                            <li key={ch.number}>
-                              <strong>Chapter {ch.number}: {ch.title}</strong> – {ch.desc}
-                            </li>
-                          ))}
-                        </ul>
+                        {b.chapters && b.chapters.length > 0 ? (
+                          <ul className="space-y-1.5 list-disc list-inside">
+                            {b.chapters.map((ch) => (
+                              <li key={ch.number}>
+                                <strong>Chapter {ch.number}: {ch.title}</strong> – {ch.desc}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-slate-600 dark:text-slate-400 italic">Chapter overview coming soon.</p>
+                        )}
                       </div>
                     )}
                   </div>

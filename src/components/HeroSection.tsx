@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Headphones, BookOpen, ExternalLink, ArrowRight, Cpu, Award, Sparkles, Bot, MapPin } from "lucide-react";
+import { Headphones, BookOpen, ArrowRight, Cpu, Award, Sparkles, Bot, MapPin } from "lucide-react";
 import { PROFILE_DATA } from "@/data/profile";
 
 export function HeroSection() {
@@ -72,16 +72,14 @@ export function HeroSection() {
                 <span>Explore Music & Books</span>
               </Link>
 
-              <a
-                href="https://www.amazon.com/stores/William-Zain/author/B0FFN749GN"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/creations?tab=book"
                 className="hidden sm:flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Buy Zain's Books</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-              </a>
+                <ArrowRight className="w-3.5 h-3.5 opacity-80" />
+              </Link>
             </div>
 
           </div>
