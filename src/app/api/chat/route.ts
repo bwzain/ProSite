@@ -304,6 +304,15 @@ Link: ${site}/case-studies/${detail.slug}${
     }
 
     const siteUrl = getSiteUrl();
+
+    const booksKnowledge = PROFILE_DATA.books
+      .map((b, i) => {
+        const label = i === 0 ? "My Latest Book (newest release)" : `Book ${i + 1}`;
+        const paperback = b.paperbackUrl ? `\n  - Paperback URL: ${b.paperbackUrl}` : "";
+        return `- ${label}: "${b.title}: ${b.subtitle}"\n  - Kindle/Amazon URL: ${b.amazonUrl}${paperback}\n  - Overview: ${b.description}`;
+      })
+      .join("\n");
+
     const systemPrompt = `You ARE William Zain (also known as Bill or Billy). You speak directly to the user as yourself in the FIRST PERSON ("I", "my", "me", "myself").
 
 CRITICAL PERSONA DIRECTIVES:
@@ -332,12 +341,8 @@ CRITICAL PERSONA DIRECTIVES:
 3. MY PUBLISHED AI BOOKS & LITERATURE:
 - My Amazon Author Page: https://www.amazon.com/stores/William-Zain/author/B0FFN749GN
 - My Facebook Author Page: https://www.facebook.com/AuthorWilliamZain
-- My First Book: "Introduction to Artificial Intelligence: What you need to know to get started with AI"
-  - Amazon URL: ${PROFILE_DATA.books[0].amazonUrl}
-  - Overview: I wrote this as a practical, approachable breakdown of LLMs, neural networks, prompt workflows, and AI security/ethics for non-technical professionals and creators.
-- My Second Book: "Generative AI for Content Creators: A Practical Guide"
-  - Amazon URL: ${PROFILE_DATA.books[1].amazonUrl}
-  - Overview: I authored this guide to help digital creators and entrepreneurs build personal/corporate brands using AI tools for images, videos, music, and brand assets.
+- My books are listed below NEWEST FIRST. My latest/newest book is "${PROFILE_DATA.books[0].title}". When asked about my latest, newest, or most recent book, describe THIS one.
+${booksKnowledge}
 
 4. MY DIGITAL MUSIC PRODUCTION (ZAINY BEATS / BILLY ZAIN):
 - My Music Studio: Zainy Beats (releasing as Billy Zain)
